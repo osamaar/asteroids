@@ -148,7 +148,7 @@ void Shader::reportOpenGLError(GLuint target,
         OpenGLErrorTarget targetType,
         const char *msg)
 {
-    int infoLogLen;
+    int infoLogLen = 0;
     vector<char> strBuffer(256);
 
     switch (targetType) {
