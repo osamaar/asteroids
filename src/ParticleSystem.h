@@ -18,14 +18,32 @@ struct Particle {
 
 class ParticleEmitter {
 public:
-    ParticleEmitter() { /* initial state */ }
+    double rate;
+    double maxPopulation;
+    int decay;
+
+    ParticleEmitter()
+            : rate(0)
+            , maxPopulation(8)
+            , decay(1000)
+            , mParticles()
+            , mElapsed(0) {
+        /* initial state */
+    }
+
     virtual ~ParticleEmitter() { }
-    virtual void update(int dt) { /* emit & manage */  }
+    void update(int dt);
+protected:
+    ObjectPool<Particle> mParticles;
+    virtual void evolveParticles(int dt) { /* apply forces, etc. */  }
+    virtual void initParticle(Particle *p) { }
 private:
-    // Derived classes declare own particle container
+    int mElapsed;
+    void emit(int dt);
 };
 
 class ParticleSystem {
+public:
     ParticleSystem();
     virtual ~ParticleSystem() { }
     void update(int dt);
