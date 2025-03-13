@@ -81,7 +81,7 @@ void Ship::setVelocity(double x, double y) {
 
 void Ship::update(int dt) {
     mShootElapsed += dt;
-    glm::dvec2 direction(glm::cos(mRotation), glm::sin(mRotation));
+    glm::dvec2 direction(glm::cos(mRotation), -glm::sin(mRotation));
     direction = glm::normalize(direction);
 
     if (mThrusting) {
