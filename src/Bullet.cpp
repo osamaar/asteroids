@@ -3,8 +3,8 @@
 Bullet::Bullet()
         : poolState()
         , age(0)
-        , maxAge(120.0)
-        , speed(10)
+        , mMaxAge(1.0)
+        , speed(10*60.0)
         , dirNormal(1.0, 1.0)
         , mPl() {
     mCollisionRadius = 3;
@@ -34,12 +34,12 @@ void Bullet::setRotation(double rotation) {
     mPl.rotation = rotation;
 }
 
-void Bullet::update() {
-    auto newPos = getPosition() + dirNormal*speed;
+void Bullet::update(int dt) {
+    auto newPos = getPosition() + dirNormal*speed*(dt/1000.0);
     setPosition(newPos.x, newPos.y);
 
-    age += 1.0;
-    if (age > maxAge) {
+    age += dt;
+    if (age > mMaxAge*1000.0) {
         poolState.alive = false;
     }
 }

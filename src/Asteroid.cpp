@@ -8,7 +8,7 @@ Asteroid::Asteroid()
         : poolState()
         //, age(0)
         //, maxAge(120.0)
-        , speed(1)
+        , speed(1*60.0)
         , dirNormal(1.0, 1.0)
         , mPl()
         , mTier(3)
@@ -99,8 +99,8 @@ void Asteroid::setRotation(double rotation) {
     mPl.rotation = rotation;
 }
 
-void Asteroid::update() {
-    auto newPos = getPosition() + dirNormal*speed;
+void Asteroid::update(int dt) {
+    auto newPos = getPosition() + dirNormal*speed*(dt/1000.0);
     setPosition(newPos.x, newPos.y);
 
     //age += 1.0;

@@ -91,7 +91,11 @@ void Game::mainloop() {
 
     reset();
 
+    int dt = 1;
+    int lastFrame = 0;
     while (!mDone) {
+        dt = SDL_GetTicks() - lastFrame;
+        lastFrame = SDL_GetTicks();
         // Init.
         //mThrusting = false;
         //mShooting = false;
@@ -101,7 +105,7 @@ void Game::mainloop() {
         handleInput();
 
         // Update.
-        update();
+        update(dt);
 
         // Draw.
         glEnable(GL_MULTISAMPLE);
@@ -192,12 +196,12 @@ void Game::handleInput() {
     }
 }
 
-void Game::update() {
+void Game::update(int dt) {
     if (!mPause) {
-        updateShip(mShip);
-        updatePlayerBullets();
-        updateEnemyBullets();
-        updateAsteroids();
+        updateShip(mShip, dt);
+        updatePlayerBullets(dt);
+        updateEnemyBullets(dt);
+        updateAsteroids(dt);
     }
 
     if (mAsteroidPool.getActiveCount() == 0) {
@@ -205,12 +209,12 @@ void Game::update() {
     }
 }
 
-void Game::updateShip(Ship &ship) {
+void Game::updateShip(Ship &ship, int dt) {
     if (mShooting) {
-        ship.shoot(mPlayerBulletPool);
+        ship.shoot(mPlayerBulletPool, dt);
     }
 
-    ship.update();
+    ship.update(dt);
 
     auto shipPos = ship.getPosition();
     wrapAroundScreen(shipPos);
@@ -224,9 +228,9 @@ void Game::updateShip(Ship &ship) {
 
 }
 
-void Game::updatePlayerBullets() {
+void Game::updatePlayerBullets(int dt) {
     mPlayerBulletPool.apply([&](Bullet& b) {
-        b.update();
+        b.update(dt);
         auto bPos = b.getPosition();
         wrapAroundScreen(bPos);
         b.setPosition(bPos.x, bPos.y);
@@ -241,13 +245,13 @@ void Game::updatePlayerBullets() {
     });
 }
 
-void Game::updateEnemyBullets() {
+void Game::updateEnemyBullets(int dt) {
 
 }
 
-void Game::updateAsteroids() {
+void Game::updateAsteroids(int dt) {
     mAsteroidPool.apply([&](Asteroid& a) {
-        a.update();
+        a.update(dt);
         auto aPos = a.getPosition();
         wrapAroundScreen(aPos);
         a.setPosition(aPos.x, aPos.y);

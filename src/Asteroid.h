@@ -27,7 +27,7 @@ public:
     int getTier();
     virtual void setPosition(double x, double y) override;
     virtual void setRotation(double rotation) override;      // degrees
-    virtual void update() override;
+    virtual void update(int dt) override;
     virtual void render(PolylineRenderer &renderer) override;
 private:
     Polyline mPl;

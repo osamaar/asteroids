@@ -15,9 +15,9 @@ public:
 
     void rotate(int dRotation);
     void thrust(bool toggle);
-    void shoot(ObjectPool<Bullet> &bulletPool);
+    void shoot(ObjectPool<Bullet> &bulletPool, int dt);
     void setVelocity(double x, double y);
-    virtual void update() override;
+    virtual void update(int dt) override;
     virtual void setPosition(double x, double y) override;
     virtual void setRotation(double rotation) override;
     virtual void render(PolylineRenderer &renderer) override;

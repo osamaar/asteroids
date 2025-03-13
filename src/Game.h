@@ -16,11 +16,11 @@ public:
     void reset();
     void mainloop();
     void handleInput();
-    void update();
-    void updateShip(Ship &ship);
-    void updatePlayerBullets();
-    void updateEnemyBullets();
-    void updateAsteroids();
+    void update(int dt);
+    void updateShip(Ship &ship, int dt);
+    void updatePlayerBullets(int dt);
+    void updateEnemyBullets(int dt);
+    void updateAsteroids(int dt);
     void wrapAroundScreen(glm::dvec2 &vTarget);
     void generateAsteroids();
 

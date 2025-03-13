@@ -10,11 +10,11 @@ using namespace std;
 
 Ship::Ship()
         : mVelocity(0.0)
-        , mAcceleration(0.05)
-        , mMaxSpeed(4.0)
+        , mAcceleration(0.05*60.0)
+        , mMaxSpeed(4.0*60.0)
         , mPl()
         , mThrusting(false)
-        , mShootRate(7.0/60.0)
+        , mShootRate(8.0)
         , mShootElapsed(0){
     mCollisionRadius = 5;
     mPl.color = glm::vec4(0.4, 1.0, 0.4, 1.0);
@@ -56,15 +56,15 @@ void Ship::thrust(bool toggle) {
     mThrusting = toggle;
 }
 
-void Ship::shoot(ObjectPool<Bullet>& bulletPool) {
-    if (mShootElapsed > 1.0/mShootRate) {
+void Ship::shoot(ObjectPool<Bullet>& bulletPool, int dt) {
+    if (mShootElapsed > 1000.0/mShootRate) {
         mShootElapsed = 0;
         auto bullet = bulletPool.aquireObject();
         if (bullet) {
             bullet->setPosition(mPosition.x, mPosition.y);
             bullet->setRotation(mRotation);
             bullet->age = 0;
-            bullet->maxAge = 50;
+            bullet->mMaxAge = 0.8;
             auto dirVec = glm::dvec2(glm::cos(mRotation), glm::sin(mRotation));
             bullet->dirNormal = glm::normalize(dirVec);
         }
@@ -76,30 +76,31 @@ void Ship::setVelocity(double x, double y) {
     mVelocity.y = y;
 }
 
-void Ship::update() {
-    mShootElapsed += 1;     // use dt
+void Ship::update(int dt) {
+    mShootElapsed += dt;
     glm::dvec2 direction(glm::cos(mRotation), glm::sin(mRotation));
     direction = glm::normalize(direction);
 
     if (mThrusting) {
-        mVelocity += mAcceleration * direction;
+        mVelocity += mAcceleration*(dt/1000.0) * direction;
 
     }
 
     if (glm::length(mVelocity) > mMaxSpeed) {
         glm::dvec2 actVelDir = glm::normalize(mVelocity);
-        mVelocity = mMaxSpeed * actVelDir;
+        mVelocity = mMaxSpeed*(dt/1000.0)* actVelDir;
     }
 
     //cout << "speed" << glm::length(mVelocity) << ", max speed:" << mMaxSpeed << endl;
     //cout << " direction: " << direction.x << ", " << direction.y << endl;
 
+    double rotDt = (twoPi*60.0/64.0)*(dt/1000.0);
     switch (mRotating) {
     case -1:
-        setRotation(mRotation - twoPi / 64);
+        setRotation(mRotation - rotDt);
         break;
     case 1:
-        setRotation(mRotation + twoPi / 64);
+        setRotation(mRotation + rotDt);
         break;
     case 0:
     default:

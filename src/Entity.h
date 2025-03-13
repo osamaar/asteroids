@@ -14,7 +14,7 @@ public:
 
     virtual void setPosition(double x, double y);
     virtual void setRotation(double rotation);      // degrees
-    virtual void update() = 0;
+    virtual void update(int dt) = 0;
     virtual void render(PolylineRenderer &renderer) = 0;
 protected:
     glm::dvec2 mPosition;
