@@ -1,17 +1,21 @@
 #pragma once
 
 
+#include <fmt/format.h>
+#include <limits>
 #include <vector>
 #include <functional>
 
 template<typename T>
 class ObjectPool {
 public:
-    ObjectPool() : mPool(10), mActiveCount(0) { }
-    ObjectPool(int size) : mPool(size), mActiveCount(0) { }
+    ObjectPool() : mPool(8), mActiveCount(0) { }
+    ObjectPool(std::size_t n) : mPool(n), mActiveCount(0) { }
     ~ObjectPool() { }
 
-    T *aquireObject() { 
+    // Return a pointer to next available object in pool,
+    // or nullptr if full.
+    T *aquireObject() {
         for (auto&& obj : mPool) {
             if (!obj.poolState.alive) {
                 obj.poolState.alive = true;
@@ -41,12 +45,39 @@ public:
         }
     }
 
-    int size() { return mPool.size(); }
-    int getActiveCount() { return mActiveCount; }
-    //T *extend(int amount) { }
+    std::size_t size() { return mPool.size(); }
+    std::size_t sizeActive() { return mActiveCount; }
+    std::size_t sizeInactive() { return mPool.size() - mActiveCount; }
+
+    // NOTE: Resize and friends reallocate container,
+    //       invalidating all ptrs/refs.
+
+    // Resize exactly to n. Expands and shrinks container.
+    void resize(std::size_t n) {
+        //fmt::print("resizing obj pool from: {}"
+        //           " to: {}. Active objects: {}\n",
+        //            mPool.size(), n, mActiveCount);
+        mPool.resize(n);
+    }
+
+    // Resize to n. Expands only.
+    void resizeAtLeast(std::size_t n) {
+        if (n > mPool.size())
+            resize(n);
+    }
+
+    // Make available at least n inactive objects.
+    void reserveAtLeast(std::size_t n) {
+        std::size_t avail = sizeInactive();
+        if (avail < n) {
+            std::size_t expand = n - avail;
+            resizeAtLeast(size() + expand);
+        }
+    }
+
 private:
     std::vector<T> mPool;
-    int mActiveCount;
+    std::size_t mActiveCount;
 };
 
 struct PoolState {

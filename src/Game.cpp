@@ -28,7 +28,7 @@ Game::Game()
         , mShooting(false)
         , mShip()
         , mAsteroidPool(100)
-        , mPlayerBulletPool(400) {
+        , mPlayerBulletPool(100) {
 
     int success = false;
     success = SDL_Init(SDL_INIT_EVERYTHING);
@@ -260,7 +260,7 @@ void Game::update(int dt) {
         colorShiftFilter->update(dt);
     }
 
-    if (mAsteroidPool.getActiveCount() == 0) {
+    if (mAsteroidPool.sizeActive() == 0) {
         mPause = true;
     }
 }
@@ -297,6 +297,7 @@ void Game::updatePlayerBullets(int dt) {
         wrapAroundScreen(bPos);
         b.setPosition(bPos.x, bPos.y);
 
+        mAsteroidPool.resizeAtLeast(mAsteroidPool.sizeActive()*3);
         mAsteroidPool.apply([&](Asteroid& a) {
             if (!collides(a, b)) return;
 
