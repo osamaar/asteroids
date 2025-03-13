@@ -11,6 +11,7 @@ public:
     PoolState poolState;
     //double age;
     //double maxAge;
+    int hp;
     double speed;
     glm::dvec2 dirNormal;
 
@@ -23,8 +24,10 @@ public:
     double getRadius();
     void createShape();
     void clearShape();
-    void regenShape(int tier);
+    void regen(int tier);
     int getTier();
+    bool isAlive();
+    void takeDamage(int dmg);
     virtual void setPosition(double x, double y) override;
     virtual void setRotation(double rotation) override;      // degrees
     virtual void update(int dt) override;

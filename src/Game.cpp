@@ -241,10 +241,22 @@ void Game::updatePlayerBullets(int dt) {
         b.setPosition(bPos.x, bPos.y);
 
         mAsteroidPool.apply([&](Asteroid& a) {
-            if (collides(a, b)) {
-                a.poolState.alive = false;
-                mAsteroidPool.releaseObject(a);
-                mPlayerBulletPool.releaseObject(b);
+            if (!collides(a, b)) return;
+
+            int tier = a.getTier() - 1;
+            auto pos = a.getPosition();
+            a.takeDamage(1);
+
+            mPlayerBulletPool.releaseObject(b);
+
+            if (a.isAlive()) return;
+            mAsteroidPool.releaseObject(a);
+
+            if (tier > 0) {
+                for (int i = 0; i < 3; i++) {
+                    auto a = mAsteroidPool.aquireObject();
+                    if (a) randomizeAsteroid(a, tier, pos.x, pos.y);
+                }
             }
         });
     });
@@ -277,13 +289,17 @@ void Game::generateAsteroids() {
         if (a) {
             double x = randRangeNaive(0, mResolution.x);
             double y = randRangeNaive(0, mResolution.y);
-            a->setPosition(x, y);
-            double rot = randRangeNaive(0, twoPi);
-            auto dirVec = glm::dvec2(glm::cos(rot), glm::sin(rot));
-            a->dirNormal = glm::normalize(dirVec);
-            a->regenShape(4);
+            randomizeAsteroid(a, 4, x, y);
         }
     }
+}
+
+void Game::randomizeAsteroid(Asteroid *a, int tier, double x, double y) {
+        a->setPosition(x, y);
+        double rot = randRangeNaive(0, twoPi);
+        auto dirVec = glm::dvec2(glm::cos(rot), glm::sin(rot));
+        a->dirNormal = glm::normalize(dirVec);
+        a->regen(tier);
 }
 
 void Game::useAlphaBlending() {

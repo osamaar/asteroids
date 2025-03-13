@@ -8,6 +8,7 @@ Asteroid::Asteroid()
         : poolState()
         //, age(0)
         //, maxAge(120.0)
+        , hp(1)
         , speed(1*60.0)
         , dirNormal(1.0, 1.0)
         , mPl()
@@ -20,6 +21,7 @@ Asteroid::Asteroid(int tier)
         : poolState()
         //, age(0)
         //, maxAge(120.0)
+        , hp(tier)
         , speed(1)
         , dirNormal(1.0, 1.0)
         , mPl()
@@ -75,14 +77,26 @@ void Asteroid::clearShape() {
     mPl.points.clear();
 }
 
-void Asteroid::regenShape(int tier) {
+void Asteroid::regen(int tier) {
     mTier = tier;
     clearShape();
     createShape();
+    hp = tier;
 }
 
 int Asteroid::getTier() {
     return mTier;
+}
+
+bool Asteroid::isAlive() {
+    return poolState.alive;
+}
+
+void Asteroid::takeDamage(int dmg) {
+    hp -= dmg;
+    if (hp < 1) {
+        poolState.alive = false;
+    }
 }
 
 void Asteroid::render(PolylineRenderer &renderer) {

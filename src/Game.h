@@ -24,6 +24,7 @@ public:
     void updateAsteroids(int dt);
     void wrapAroundScreen(glm::dvec2 &vTarget);
     void generateAsteroids();
+    void randomizeAsteroid(Asteroid *a, int tier, double x, double y);
 
     void useAlphaBlending();
     void useAdditiveBlending();
