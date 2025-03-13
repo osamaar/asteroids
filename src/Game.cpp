@@ -147,7 +147,7 @@ void Game::mainloop() {
         glEnable(GL_MULTISAMPLE);
         passFilter->bind();
         useAlphaBlending();
-        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         plr.begin();
