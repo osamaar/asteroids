@@ -33,9 +33,7 @@ void AddFilter::renderContent() {
 
     mShader->bind();
     success = mShader->setUniform<GLuint>(1, 1);
-    cout << "Setting uniform 'addTex': " << success << endl;
     success = mShader->setUniform<GLfloat>(2, mFactor);
-    cout << "Setting uniform 'factor': " << success << endl;
     checkGLErrors(__FILE__, __LINE__);
 
     renderFramebuffer(mInputFramebuffer, *mShader);
