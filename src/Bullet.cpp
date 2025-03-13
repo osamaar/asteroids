@@ -39,9 +39,9 @@ void Bullet::update(int dt) {
     setPosition(newPos.x, newPos.y);
 
     age += dt;
-    if (age > maxAge) {
-        poolState.alive = false;
-    }
+    //if (age > maxAge) {
+    //    poolState.alive = false;
+    //}
 }
 
 void Bullet::render(PolylineRenderer & renderer) {

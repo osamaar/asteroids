@@ -18,41 +18,68 @@ struct Particle {
 
 class ParticleEmitter {
 public:
-    double rate;
-    double maxPopulation;
-    int decay;
+    glm::dvec2 position;
+    double emitRate;
+    double emitMaxPopulation;
+    int emitDecay;
+    int age, maxAge;
 
     ParticleEmitter()
-            : rate(0)
-            , maxPopulation(8)
-            , decay(1000)
+            : position(0.0, 0.0)
+            , emitRate(0)
+            , emitMaxPopulation(8)
+            , emitDecay(1000)
             , mParticles()
-            , mElapsed(0) {
+            , mElapsed(0)
+            , mEmitAccum(0)
+            , age(0)
+            , maxAge(0) {
         /* initial state */
     }
 
     virtual ~ParticleEmitter() { }
     void update(int dt);
+    void reset();
 protected:
     ObjectPool<Particle> mParticles;
     virtual void evolveParticles(int dt) { /* apply forces, etc. */  }
     virtual void initParticle(Particle *p) { }
 private:
     int mElapsed;
+    double mEmitAccum;
     void emit(int dt);
 };
 
+template <typename EmitterType>
 class ParticleSystem {
 public:
-    ParticleSystem();
+    int age, maxAge;
+
+    ParticleSystem() : mEmitters(), age(0), maxAge(0) { }
     virtual ~ParticleSystem() { }
-    void update(int dt);
-    void addEmitter(ParticleEmitter &emitter);
+    void update(int dt) {
+        updateEmitters(dt);
+        updateSystem(dt);
+    }
+    void addEmitter(EmitterType &emitter) {
+        mEmitters.push_back(&emitter);
+    }
+    void reset() {
+        age = 0;
+        for (auto &&emitter : mEmitters) {
+            emitter->reset();
+        }
+    }
 protected:
-    std::vector<ParticleEmitter *> mEmitters;
+    std::vector<EmitterType *> mEmitters;
     virtual void updateSystem(int dt) { }
 private:
-    void updateEmitters(int dt);
+    void updateEmitters(int dt) {
+        age += dt;
+        for (auto &&emitter : mEmitters) {
+            emitter->update(dt);
+        }
+    }
 };
 
 

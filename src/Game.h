@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include "Explosion.h"
 #include "SoundClip.h"
 #include "Ship.h"
 #include "Asteroid.h"
@@ -31,6 +32,7 @@ public:
     void updatePlayerBullets(int dt);
     void updateEnemyBullets(int dt);
     void updateAsteroids(int dt);
+    void updateExplosions(int dt);
     void wrapAroundScreen(glm::dvec2 &vTarget);
     void generateAsteroids();
     void randomizeAsteroid(Asteroid *a, int tier, double x, double y);
@@ -50,6 +52,7 @@ private:
     Ship mShip;
     ObjectPool<Asteroid> mAsteroidPool;
     ObjectPool<Bullet> mPlayerBulletPool;
+    ObjectPool<Explosion> mExplosionPool;
     glm::ivec2 mResolution;
     SoundClip *mShootSound;
     SoundClip *mExplosionSound0;
@@ -63,5 +66,7 @@ private:
     ScanlineFilter *scanlineFilter;
     ScreenShakeFilter *screenShakeFilter;
     ColorShiftFilter *colorShiftFilter;
+
+    Explosion mExplosion;
 };
 

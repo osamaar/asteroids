@@ -28,7 +28,8 @@ Game::Game()
         , mShooting(false)
         , mShip()
         , mAsteroidPool(100)
-        , mPlayerBulletPool(100) {
+        , mPlayerBulletPool(100)
+        , mExplosionPool(100) {
 
     int success = false;
     success = SDL_Init(SDL_INIT_EVERYTHING);
@@ -160,12 +161,18 @@ void Game::mainloop() {
         });
 
         mPlayerBulletPool.apply([&](Bullet& b) {
-            if (b.poolState.alive) {
-                b.render(plr);
-            }
+            b.render(plr);
+        });
+
+        useAdditiveBlending();
+        mExplosion.render(plr);
+        mExplosionPool.apply([&](Explosion &e) {
+            e.render(plr);
         });
 
         plr.end();
+
+        useAlphaBlending();
         
         passFilter->process();
         passFilter->unbind();
@@ -245,6 +252,8 @@ void Game::handleInput() {
                 mShooting = false;
             } else if (e.key.keysym.sym == SDLK_HOME) {
                 screenShakeFilter->init(0.05);
+            } else if (e.key.keysym.sym == SDLK_DELETE) {
+                mExplosion.init(glm::dvec2(200, 100));
             }
         }
     }
@@ -256,6 +265,7 @@ void Game::update(int dt) {
         updatePlayerBullets(dt);
         updateEnemyBullets(dt);
         updateAsteroids(dt);
+        updateExplosions(dt);
         screenShakeFilter->update(dt);
         colorShiftFilter->update(dt);
     }
@@ -293,6 +303,9 @@ void Game::updateShip(Ship &ship, int dt) {
 void Game::updatePlayerBullets(int dt) {
     mPlayerBulletPool.apply([&](Bullet& b) {
         b.update(dt);
+        if (b.age > b.maxAge) {
+            mPlayerBulletPool.releaseObject(b);
+        }
         auto bPos = b.getPosition();
         wrapAroundScreen(bPos);
         b.setPosition(bPos.x, bPos.y);
@@ -308,6 +321,11 @@ void Game::updatePlayerBullets(int dt) {
             mPlayerBulletPool.releaseObject(b);
 
             if (a.isAlive()) return;
+
+            // Create a new explosion.
+            Explosion *e = mExplosionPool.aquireObject();
+            if (e) e->init(a.getPosition());
+
             mAsteroidPool.releaseObject(a);
             mExplosionSound0->play();
             screenShakeFilter->init(0.05);
@@ -335,6 +353,16 @@ void Game::updateAsteroids(int dt) {
         a.setPosition(aPos.x, aPos.y);
     });
 
+}
+
+void Game::updateExplosions(int dt) {
+    mExplosion.update(dt);
+    mExplosionPool.apply([&](Explosion &e) {
+        if (e.age > e.maxAge) {
+            mExplosionPool.releaseObject(e);
+        }
+        e.update(dt);
+    });
 }
 
 void Game::wrapAroundScreen(glm::dvec2 &vTarget) {
