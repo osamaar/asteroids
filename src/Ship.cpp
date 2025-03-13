@@ -56,7 +56,7 @@ void Ship::thrust(bool toggle) {
     mThrusting = toggle;
 }
 
-void Ship::shoot(ObjectPool<Bullet>& bulletPool, int dt) {
+bool Ship::shoot(ObjectPool<Bullet>& bulletPool, int dt) {
     if (mShootElapsed > 1000.0/mShootRate) {
         mShootElapsed = 0;
         auto bullet = bulletPool.aquireObject();
@@ -69,7 +69,9 @@ void Ship::shoot(ObjectPool<Bullet>& bulletPool, int dt) {
             bullet->speed = 600 + glm::length(mVelocity);
             bullet->dirNormal = glm::normalize(dirVec);
         }
+        return true;
     }
+    return false;
 }
 
 void Ship::setVelocity(double x, double y) {

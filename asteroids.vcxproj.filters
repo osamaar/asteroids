@@ -144,5 +144,7 @@
     <None Include="res\pl.vert.glsl" />
     <None Include="res\add.frag.glsl" />
     <None Include="res\add.vert.glsl" />
+    <None Include="res\screenshake.frag.glsl" />
+    <None Include="res\screenshake.vert.glsl" />
   </ItemGroup>
 </Project>

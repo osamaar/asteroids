@@ -10,6 +10,12 @@
 #include <SDL2/SDL.h>
 #include <vector>
 
+class Shader;
+class PassthroughFilter;
+class BlurFilter;
+class AddFilter;
+class ScreenShakeFilter;
+
 class Game {
 public:
     Game();
@@ -26,6 +32,10 @@ public:
     void wrapAroundScreen(glm::dvec2 &vTarget);
     void generateAsteroids();
     void randomizeAsteroid(Asteroid *a, int tier, double x, double y);
+    void loadShaders();
+    void loadFilters();
+    void unloadShaders();
+    void unloadFilters();
 
     void useAlphaBlending();
     void useAdditiveBlending();
@@ -42,5 +52,11 @@ private:
     SoundClip *mShootSound;
     SoundClip *mExplosionSound0;
     SoundClip *mExplosionSound1;
+
+    Shader *plSh, *passSh, *blurSh, *addSh, *screenShakeSh;
+    PassthroughFilter *passFilter;
+    BlurFilter *blurFilter;
+    AddFilter *addFilter;
+    ScreenShakeFilter *screenShakeFilter;
 };
 

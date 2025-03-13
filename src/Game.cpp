@@ -1,3 +1,4 @@
+#include "ScreenShakeFilter.h"
 #include "SoundClip.h"
 #include "AddFilter.h"
 #include "BlurFilter.h"
@@ -84,9 +85,15 @@ Game::Game()
     mExplosionSound0->setVolume(50);
     mExplosionSound1 = new SoundClip("../../res/explosion-b.wav");
     mExplosionSound1->setVolume(60);
+
+    loadShaders();
+    loadFilters();
 }
 
 Game::~Game() {
+    unloadFilters();
+    unloadShaders();
+
     SDL_ShowCursor(SDL_ENABLE);
     Mix_HaltMusic();
     Mix_HaltChannel(-1);
@@ -109,18 +116,7 @@ void Game::reset() {
 }
 
 void Game::mainloop() {
-    Shader plSh("../../res/pl.vert.glsl", "../../res/pl.frag.glsl");
-    Shader passSh("../../res/pass.vert.glsl", "../../res/pass.frag.glsl");
-    Shader blurSh("../../res/blur.vert.glsl", "../../res/blur.frag.glsl");
-    Shader addSh("../../res/add.vert.glsl", "../../res/add.frag.glsl");
-
-    PassthroughFilter passFilter(passSh, mResolution);
-    BlurFilter blurFilter(blurSh, mResolution/2);
-    blurFilter.setIterations(7);
-    AddFilter addFilter(addSh, mResolution);
-    addFilter.setFactor(2);
-
-    PolylineRenderer plr(plSh, mResolution);
+    PolylineRenderer plr(*plSh, mResolution);
 
     Mix_Music *music = Mix_LoadMUS("../../res/drone.mp3");
     if (music) Mix_PlayMusic(music, -1);
@@ -146,7 +142,7 @@ void Game::mainloop() {
 
         // Draw.
         glEnable(GL_MULTISAMPLE);
-        passFilter.bind();
+        passFilter->bind();
         useAlphaBlending();
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -169,26 +165,32 @@ void Game::mainloop() {
 
         plr.end();
         
-        passFilter.process();
-        passFilter.unbind();
+        passFilter->process();
+        passFilter->unbind();
 
-        blurFilter.bind();
-        passFilter.renderContent();
-        blurFilter.process();
-        blurFilter.unbind();
+        blurFilter->bind();
+        passFilter->renderContent();
+        blurFilter->process();
+        blurFilter->unbind();
 
-        addFilter.bind();
-        passFilter.renderContent();
+        addFilter->bind();
+        passFilter->renderContent();
         // must get blurred texture every frame due to its alternating buffers
-        addFilter.bindAddFramebuffer();
-        blurFilter.renderContent();
-        addFilter.process();
-        addFilter.unbind();
+        addFilter->bindAddFramebuffer();
+        blurFilter->renderContent();
+        addFilter->process();
+        addFilter->unbind();
 
+        screenShakeFilter->bind();
+        addFilter->renderContent();
+        screenShakeFilter->process();
+        screenShakeFilter->unbind();
 
         // render to backbuffer
         glEnable(GL_MULTISAMPLE);
-        addFilter.renderContent();
+        //glClearColor(0.2, 0.2, 0.2, 0.0);
+        //glClear(GL_COLOR_BUFFER_BIT);
+        screenShakeFilter->renderContent();
 
         // render to backbuffer again
         //useAdditiveBlending();
@@ -228,6 +230,8 @@ void Game::handleInput() {
                 mShip.rotate(0);
             } else if (e.key.keysym.sym == SDLK_SPACE) {
                 mShooting = false;
+            } else if (e.key.keysym.sym == SDLK_HOME) {
+                screenShakeFilter->init(0.05);
             }
         }
     }
@@ -239,6 +243,7 @@ void Game::update(int dt) {
         updatePlayerBullets(dt);
         updateEnemyBullets(dt);
         updateAsteroids(dt);
+        screenShakeFilter->update(dt);
     }
 
     if (mAsteroidPool.getActiveCount() == 0) {
@@ -247,9 +252,13 @@ void Game::update(int dt) {
 }
 
 void Game::updateShip(Ship &ship, int dt) {
+    bool shotFired = false;
     if (mShooting) {
-        ship.shoot(mPlayerBulletPool, dt);
+        shotFired = ship.shoot(mPlayerBulletPool, dt);
         mShootSound->play();
+        if (shotFired) {
+            screenShakeFilter->init(0.007);
+        }
     }
 
     ship.update(dt);
@@ -286,6 +295,7 @@ void Game::updatePlayerBullets(int dt) {
             if (a.isAlive()) return;
             mAsteroidPool.releaseObject(a);
             mExplosionSound0->play();
+            screenShakeFilter->init(0.03);
 
             if (tier > 0) {
                 for (int i = 0; i < 3; i++) {
@@ -335,6 +345,38 @@ void Game::randomizeAsteroid(Asteroid *a, int tier, double x, double y) {
         auto dirVec = glm::dvec2(glm::cos(rot), glm::sin(rot));
         a->dirNormal = glm::normalize(dirVec);
         a->regen(tier);
+}
+
+void Game::loadShaders() {
+    plSh = new Shader("../../res/pl.vert.glsl", "../../res/pl.frag.glsl");
+    passSh = new Shader("../../res/pass.vert.glsl", "../../res/pass.frag.glsl");
+    blurSh = new Shader("../../res/blur.vert.glsl", "../../res/blur.frag.glsl");
+    addSh = new Shader("../../res/add.vert.glsl", "../../res/add.frag.glsl");
+    screenShakeSh = new Shader("../../res/screenshake.vert.glsl", "../../res/screenshake.frag.glsl");
+}
+
+void Game::loadFilters() {
+    passFilter = new PassthroughFilter(*passSh, mResolution);
+    blurFilter = new BlurFilter(*blurSh, mResolution/2);
+    blurFilter->setIterations(7);
+    addFilter = new AddFilter(*addSh, mResolution);
+    addFilter->setFactor(2);
+    screenShakeFilter = new ScreenShakeFilter(*screenShakeSh, mResolution);
+}
+
+void Game::unloadShaders() {
+    if (plSh) delete plSh;
+    if (passSh) delete passSh;
+    if (blurSh) delete blurSh;
+    if (addSh) delete  addSh;
+    if (screenShakeSh) delete screenShakeSh;
+}
+
+void Game::unloadFilters() {
+    if (passFilter) delete passFilter;
+    if (blurFilter) delete blurFilter;
+    if (addFilter) delete addFilter;
+    if (screenShakeFilter) delete screenShakeFilter;
 }
 
 void Game::useAlphaBlending() {

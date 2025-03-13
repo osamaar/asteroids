@@ -22,15 +22,14 @@ public:
     void update(int dt);
 private:
     Shader *mShader;
-    glm::dvec2 mOffset;
-    glm::dvec2 mTargetOffset;
+    glm::dvec2 mLastOffset;
+    glm::dvec2 mNextOffset;
+    glm::dvec2 mCurrOffset;
     double mRadius;
-    int mDuration;
-    int mElapsed;
+    int mElapsed;   // since last offset
     double mFreq;
-    double mSpeed;
 
-    void pickTargetOffset(double radius);
+    void pickNextOffset();
 };
 
 

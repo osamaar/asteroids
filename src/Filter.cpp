@@ -117,6 +117,7 @@ void Filter::unbindFramebuffer(GenericFramebuffer &fb) {
 
 void Filter::renderFramebuffer(GenericFramebuffer &fb, Shader &shader) {
     glActiveTexture(GL_TEXTURE0);
+    checkGLErrors(__FILE__, __LINE__);
     glBindTexture(GL_TEXTURE_2D, fb.getGLTexture());
     checkGLErrors(__FILE__, __LINE__);
 

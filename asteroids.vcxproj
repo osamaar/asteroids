@@ -213,6 +213,8 @@
     <None Include="res\pass.vert.glsl" />
     <None Include="res\pl.frag.glsl" />
     <None Include="res\pl.vert.glsl" />
+    <None Include="res\screenshake.frag.glsl" />
+    <None Include="res\screenshake.vert.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
