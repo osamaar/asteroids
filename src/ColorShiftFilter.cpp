@@ -62,7 +62,7 @@ void ColorShiftFilter::update(int dt) {
     mRadius -= 0.01*dt/1000.0;
 
     // Reached target
-    fmt::print("ColorShiftFilter::mRadius: {:}\n", mRadius);
+    //fmt::print("ColorShiftFilter::mRadius: {:}\n", mRadius);
     if (mRadius <= 0.0) {
         mRadius = 0.0;
         mNextOffset = glm::dvec2(0.0, 0.0);
