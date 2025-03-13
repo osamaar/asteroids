@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <vector>
-#include <iostream>
 #include <cstring>
 
 using namespace std;
@@ -81,8 +80,5 @@ void ColorShiftFilter::pickNextOffset() {
     }
 
     mSwingDir = !mSwingDir;
-    //cout << mLastOffset.x << ", " << mLastOffset.y << " - ";
-    //cout << mNextOffset.x << ", " << mNextOffset.y << endl;
-    //cout << "pick next offset" << endl;
 }
 
