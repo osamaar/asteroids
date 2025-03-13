@@ -5,6 +5,7 @@
 #include "Polyline.h"
 #include "PolylineRenderer.h"
 #include "Shader.h"
+#include "helpers.h"
 #include <glm/glm.hpp>
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
@@ -73,8 +74,14 @@ void Game::mainloop() {
     bullet.setPosition(WIN_W/2, WIN_H/2 - 50);
     bullet.setRotation(ship.getRotation());
 
-    Asteroid asteroid;
-    asteroid.setPosition(WIN_W/2+100, WIN_H/2);
+    for (int i = 0; i < 10; i++) {
+        Asteroid *a = mAsteroidPool.getUnusedObject();
+        if (a) {
+            double x = randRangeNaive(0, WIN_W);
+            double y = randRangeNaive(0, WIN_H);
+            a->setPosition(x, y);
+        }
+    }
 
     while (!mDone) {
         // Init.
@@ -100,13 +107,24 @@ void Game::mainloop() {
         if (shipPos.y > WIN_H) shipPos.y = 0;
         ship.setPosition(shipPos.x, shipPos.y);
 
+        mAsteroidPool.apply([](Asteroid& a) {
+            // Update
+        });
+
         // Draw.
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
         plr.begin();
         ship.render(plr);
-        asteroid.render(plr);
+        //asteroid->render(plr);
+
+        mAsteroidPool.apply([&](Asteroid& a) {
+            if (a.poolState.alive) {
+                a.render(plr);
+            }
+        });
+
         bullet.render(plr);
         plr.end();
 

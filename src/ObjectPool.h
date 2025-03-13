@@ -2,6 +2,7 @@
 
 
 #include <vector>
+#include <functional>
 
 template<typename T>
 class ObjectPool {
@@ -18,6 +19,12 @@ public:
             }
         }
         return nullptr;
+    }
+
+    void apply(std::function<void(T&)> fn) {
+        for (auto&& obj : mPool) {
+            fn(obj);
+        }
     }
     //T *extend(int amount) { }
 private:
