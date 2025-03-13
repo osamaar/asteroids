@@ -108,7 +108,7 @@ Game::~Game() {
 
 void Game::reset() {
     mShip.setPosition(mResolution.x/2, mResolution.y/2);
-    mShip.setRotation(glm::radians<double>(-90));
+    mShip.setRotation(glm::radians<double>(90));
     mShip.setVelocity(0, 0);
     mAsteroidPool.releaseAll();
     mPlayerBulletPool.releaseAll();

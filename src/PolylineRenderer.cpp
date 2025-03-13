@@ -155,7 +155,7 @@ void PolylineRenderer::renderTransformed(Polyline & pl, const glm::mat4 & view) 
     model = glm::translate(model, glm::vec3(pl.pos, 0.0));
 //    model = glm::translate(model, glm::vec3(pl.pos, 0.0f));
     model = glm::translate(model, roshift);
-    model = glm::rotate(model, (float)pl.rotation, glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::rotate(model, (float)-pl.rotation, glm::vec3(0.0f, 0.0f, 1.0f));
     model = glm::scale(model, glm::vec3((float)pl.scale));
     model = glm::translate(model, -1.0f*roshift);
 

@@ -65,7 +65,7 @@ bool Ship::shoot(ObjectPool<Bullet>& bulletPool, int dt) {
             bullet->setRotation(mRotation);
             bullet->age = 0;
             bullet->maxAge = 1.0;
-            auto dirVec = glm::dvec2(glm::cos(mRotation), glm::sin(mRotation));
+            auto dirVec = glm::dvec2(glm::cos(mRotation), -glm::sin(mRotation));
             bullet->speed = 600 + glm::length(mVelocity);
             bullet->dirNormal = glm::normalize(dirVec);
         }
@@ -100,10 +100,10 @@ void Ship::update(int dt) {
     double rotDt = (twoPi*60.0/64.0)*(dt/1000.0);
     switch (mRotating) {
     case -1:
-        setRotation(mRotation - rotDt);
+        setRotation(mRotation + rotDt);
         break;
     case 1:
-        setRotation(mRotation + rotDt);
+        setRotation(mRotation - rotDt);
         break;
     case 0:
     default:
