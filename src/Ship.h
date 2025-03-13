@@ -3,8 +3,10 @@
 
 #include "Entity.h"
 #include "Polyline.h"
+#include "ObjectPool.h"
 
 class PolylineRenderer;
+class Bullet;
 
 class Ship : public Entity {
 public:
@@ -13,6 +15,7 @@ public:
 
     void rotate(int dRotation);
     void thrust(bool toggle);
+    void shoot(ObjectPool<Bullet> &bulletPool);
     virtual void update();
     virtual void setPosition(double x, double y);
     virtual void setRotation(double rotation);
@@ -23,7 +26,8 @@ private:
     double mMaxSpeed;
     Polyline mPl;
     bool mThrusting;
-    bool mShooting;
     int mRotating;
+    double mShootRate;
+    double mShootElapsed;
 };
 

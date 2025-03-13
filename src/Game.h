@@ -1,9 +1,10 @@
 #pragma once
 
 
-#include "ObjectPool.h"
+#include "Ship.h"
 #include "Asteroid.h"
 #include "Bullet.h"
+#include "ObjectPool.h"
 #include <SDL2/SDL.h>
 #include <vector>
 
@@ -14,6 +15,10 @@ public:
 
     void mainloop();
     void handleInput();
+    void updateShip(Ship &ship);
+    void updatePlayerBullets();
+    void updateEnemyBullets();
+    void updateAsteroids();
 private:
     SDL_Window *mWin;
     SDL_GLContext mContext;
@@ -22,6 +27,9 @@ private:
     bool mShooting;
     int mRotating;
     ObjectPool<Asteroid> mAsteroidPool;
-    ObjectPool<Bullet> mBulletPool;
+    ObjectPool<Bullet> mPlayerBulletPool;
+
+    void wrapAroundScreen(glm::dvec2 &vTarget);
+    void generateAsteroids();
 };
 

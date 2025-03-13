@@ -1,20 +1,21 @@
 #include "Ship.h"
 #include "Polyline.h"
+#include "ObjectPool.h"
+#include "Bullet.h"
+#include "helpers.h"
 #include <glm/glm.hpp>
-#include <glm/gtc/constants.hpp>
-//#include <iostream>
+#include <iostream>
 
 using namespace std;
-
-double twoPi = glm::pi<double>() * 2;
 
 Ship::Ship()
         : mVelocity(0.0)
         , mAcceleration(0.05)
-        , mMaxSpeed(3.0)
+        , mMaxSpeed(4.0)
         , mPl()
-        , mThrusting(false) 
-        , mShooting(false) {
+        , mThrusting(false)
+        , mShootRate(5.0/60.0)
+        , mShootElapsed(0) {
     mPl.color = glm::vec4(0.4, 1.0, 0.4, 1.0);
 
     //mPl.addPoint(-10, 10);
@@ -54,7 +55,23 @@ void Ship::thrust(bool toggle) {
     mThrusting = toggle;
 }
 
+void Ship::shoot(ObjectPool<Bullet>& bulletPool) {
+    if (mShootElapsed > 1.0/mShootRate) {
+        mShootElapsed = 0;
+        auto bullet = bulletPool.aquireObject();
+        if (bullet) {
+            bullet->setPosition(mPosition.x, mPosition.y);
+            bullet->setRotation(mRotation);
+            bullet->age = 0;
+            bullet->maxAge = 50;
+            auto dirVec = glm::dvec2(glm::cos(mRotation), glm::sin(mRotation));
+            bullet->dirNormal = glm::normalize(dirVec);
+        }
+    }
+}
+
 void Ship::update() {
+    mShootElapsed += 1;     // use dt
     glm::dvec2 direction(glm::cos(mRotation), glm::sin(mRotation));
     direction = glm::normalize(direction);
 

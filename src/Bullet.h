@@ -4,11 +4,16 @@
 #include "Entity.h"
 #include "ObjectPool.h"
 #include "Polyline.h"
+#include <glm/glm.hpp>
 
 class Bullet : public Entity {
 public:
     // Change poolState.alive when bullet life is over.
     PoolState poolState;
+    double age;
+    double maxAge;
+    double speed;
+    glm::dvec2 dirNormal;
 
     Bullet();
     ~Bullet();

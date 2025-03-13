@@ -1,16 +1,30 @@
 #include "Asteroid.h"
 #include "helpers.h"
 #include <glm/glm.hpp>
-#include <glm/gtc/constants.hpp>
 
 using namespace std;
 
-const double twoPi = 2.0 * glm::pi<double>();
-
 Asteroid::Asteroid()
         : poolState()
+        //, age(0)
+        //, maxAge(120.0)
+        , speed(1)
+        , dirNormal(1.0, 1.0)
         , mPl()
-        , mRadius(40.0) {
+        , mTier(3)
+        , mRadius(0) {
+    createShape();
+}
+
+Asteroid::Asteroid(int tier)
+        : poolState()
+        //, age(0)
+        //, maxAge(120.0)
+        , speed(1)
+        , dirNormal(1.0, 1.0)
+        , mPl()
+        , mTier(tier)
+        , mRadius(0) {
     createShape();
 }
 
@@ -29,14 +43,15 @@ void Asteroid::setRadius(double radius) {
     mRadius = radius;
 }
 
-double Asteroid::getRadius()
-{
+double Asteroid::getRadius() {
     return mRadius;
 }
 
 void Asteroid::createShape() {
     mPl.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
 
+    mRadius = mTier * 10.0;
+    mCollisionRadius = mRadius;
     double angleStep = 1.0/16.0 * twoPi;
     double rMin = mRadius * 0.75;
     double rMax = mRadius;
@@ -52,8 +67,22 @@ void Asteroid::createShape() {
 
     mPl.closed = true;
     mPl.PivotOn(Polyline::PivotCG);
-    mPl.width = 2;
+    mPl.width = 1;
     //mPl.scale = 4;
+}
+
+void Asteroid::clearShape() {
+    mPl.points.clear();
+}
+
+void Asteroid::regenShape(int tier) {
+    mTier = tier;
+    clearShape();
+    createShape();
+}
+
+int Asteroid::getTier() {
+    return mTier;
 }
 
 void Asteroid::render(PolylineRenderer &renderer) {
@@ -71,6 +100,12 @@ void Asteroid::setRotation(double rotation) {
 }
 
 void Asteroid::update() {
+    auto newPos = getPosition() + dirNormal*speed;
+    setPosition(newPos.x, newPos.y);
 
+    //age += 1.0;
+    //if (age > maxAge) {
+    //    poolState.alive = false;
+    //}
 }
 

@@ -20,7 +20,7 @@ Game::Game()
         , mShooting(false)
         , mRotating(0)
         , mAsteroidPool(100)
-        , mBulletPool(400) {
+        , mPlayerBulletPool(400) {
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -70,18 +70,7 @@ void Game::mainloop() {
     Ship ship;
     ship.setPosition(WIN_W/2, WIN_H/2);
 
-    Bullet bullet;
-    bullet.setPosition(WIN_W/2, WIN_H/2 - 50);
-    bullet.setRotation(ship.getRotation());
-
-    for (int i = 0; i < 10; i++) {
-        Asteroid *a = mAsteroidPool.getUnusedObject();
-        if (a) {
-            double x = randRangeNaive(0, WIN_W);
-            double y = randRangeNaive(0, WIN_H);
-            a->setPosition(x, y);
-        }
-    }
+    generateAsteroids();
 
     while (!mDone) {
         // Init.
@@ -93,23 +82,10 @@ void Game::mainloop() {
         handleInput();
 
         // Update.
-        if (mThrusting) {
-            ship.thrust(true);
-        } else {
-            ship.thrust(false);
-        }
-        ship.rotate(mRotating);
-        ship.update();
-        auto shipPos = ship.getPosition();
-        if (shipPos.x < 0) shipPos.x = WIN_W;
-        if (shipPos.x > WIN_W) shipPos.x = 0;
-        if (shipPos.y < 0) shipPos.y = WIN_H;
-        if (shipPos.y > WIN_H) shipPos.y = 0;
-        ship.setPosition(shipPos.x, shipPos.y);
-
-        mAsteroidPool.apply([](Asteroid& a) {
-            // Update
-        });
+        updateShip(ship);
+        updatePlayerBullets();
+        updateEnemyBullets();
+        updateAsteroids();
 
         // Draw.
         glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -125,7 +101,12 @@ void Game::mainloop() {
             }
         });
 
-        bullet.render(plr);
+        mPlayerBulletPool.apply([&](Bullet& b) {
+            if (b.poolState.alive) {
+                b.render(plr);
+            }
+        });
+
         plr.end();
 
         SDL_GL_SwapWindow(mWin);
@@ -146,6 +127,8 @@ void Game::handleInput() {
                 mRotating = -1;
             } else if (e.key.keysym.sym == SDLK_RIGHT) {
                 mRotating = 1;
+            } else if (e.key.keysym.sym == SDLK_SPACE) {
+                mShooting = true;
             }
         } else if (e.type == SDL_KEYUP) {
             if (e.key.keysym.sym == SDLK_UP) {
@@ -154,7 +137,79 @@ void Game::handleInput() {
                 mRotating = 0;
             } else if (e.key.keysym.sym == SDLK_RIGHT) {
                 mRotating = 0;
+            } else if (e.key.keysym.sym == SDLK_SPACE) {
+                mShooting = false;
             }
+        }
+    }
+}
+
+void Game::updateShip(Ship &ship) {
+    if (mThrusting) {
+        ship.thrust(true);
+    } else {
+        ship.thrust(false);
+    }
+
+    if (mShooting) {
+        ship.shoot(mPlayerBulletPool);
+    }
+
+    ship.rotate(mRotating);
+    auto shipPos = ship.getPosition();
+    wrapAroundScreen(shipPos);
+    ship.setPosition(shipPos.x, shipPos.y);
+    ship.update();
+}
+
+void Game::updatePlayerBullets() {
+    mPlayerBulletPool.apply([&](Bullet& b) {
+        b.update();
+        auto bPos = b.getPosition();
+        wrapAroundScreen(bPos);
+        b.setPosition(bPos.x, bPos.y);
+
+        mAsteroidPool.apply([&](Asteroid& a) {
+            if (collides(a, b)) {
+                a.poolState.alive = false;
+                b.poolState.alive = false;
+            }
+        });
+    });
+}
+
+void Game::updateEnemyBullets() {
+
+}
+
+void Game::updateAsteroids() {
+    mAsteroidPool.apply([&](Asteroid& a) {
+        a.update();
+        auto aPos = a.getPosition();
+        wrapAroundScreen(aPos);
+        a.setPosition(aPos.x, aPos.y);
+    });
+
+}
+
+void Game::wrapAroundScreen(glm::dvec2 &vTarget) {
+    if (vTarget.x < 0) vTarget.x = WIN_W;
+    if (vTarget.x > WIN_W) vTarget.x = 0;
+    if (vTarget.y < 0) vTarget.y = WIN_H;
+    if (vTarget.y > WIN_H) vTarget.y = 0;
+}
+
+void Game::generateAsteroids() {
+    for (int i = 0; i < 10; i++) {
+        Asteroid *a = mAsteroidPool.aquireObject();
+        if (a) {
+            double x = randRangeNaive(0, WIN_W);
+            double y = randRangeNaive(0, WIN_H);
+            a->setPosition(x, y);
+            double rot = randRangeNaive(0, twoPi);
+            auto dirVec = glm::dvec2(glm::cos(rot), glm::sin(rot));
+            a->dirNormal = glm::normalize(dirVec);
+            a->regenShape(4);
         }
     }
 }

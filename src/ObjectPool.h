@@ -11,7 +11,7 @@ public:
     ObjectPool(int size) : mPool(size) { }
     ~ObjectPool() { }
 
-    T *getUnusedObject() { 
+    T *aquireObject() { 
         for (auto&& obj : mPool) {
             if (!obj.poolState.alive) {
                 obj.poolState.alive = true;
@@ -21,8 +21,13 @@ public:
         return nullptr;
     }
 
+    void releaseObject(T &obj) {
+        obj.poolState.alive = false;
+    }
+
     void apply(std::function<void(T&)> fn) {
         for (auto&& obj : mPool) {
+            if (!obj.poolState.alive) continue;
             fn(obj);
         }
     }

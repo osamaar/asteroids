@@ -2,8 +2,12 @@
 
 Bullet::Bullet()
         : poolState()
+        , age(0)
+        , maxAge(120.0)
+        , speed(10)
+        , dirNormal(1.0, 1.0)
         , mPl() {
-    // a triangle
+    mCollisionRadius = 3;
     mPl.addPoint(-3, -2);
     mPl.addPoint( 3, -1);
     mPl.addPoint( 3,  1);
@@ -31,9 +35,16 @@ void Bullet::setRotation(double rotation) {
 }
 
 void Bullet::update() {
+    auto newPos = getPosition() + dirNormal*speed;
+    setPosition(newPos.x, newPos.y);
 
+    age += 1.0;
+    if (age > maxAge) {
+        poolState.alive = false;
+    }
 }
 
 void Bullet::render(PolylineRenderer & renderer) {
     mPl.render(renderer);
 }
+
