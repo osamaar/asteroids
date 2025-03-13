@@ -38,7 +38,7 @@ public:
         }
     }
 
-    void apply(const std::function<void(T&)> &fn) {
+    void apply(std::function<void(T&)> fn) {
         for (auto&& obj : mPool) {
             if (!obj.poolState.alive) continue;
             fn(obj);
