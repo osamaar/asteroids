@@ -74,11 +74,16 @@ Game::Game()
 
     glViewport(0, 0, mResolution.x, mResolution.y);
 
+    Mix_Volume(-1, 64);
+    Mix_VolumeMusic(40);
+
     mShootSound = new Sound("../../res/shoot.wav");
-    mShootSound->setVolume(55);
+    mShootSound->setVolume(35);
 }
 
 Game::~Game() {
+    Mix_HaltMusic();
+    Mix_HaltChannel(-1);
     if (mShootSound) delete mShootSound;
 
     Mix_Quit();
