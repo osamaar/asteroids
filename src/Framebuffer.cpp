@@ -10,14 +10,18 @@ using namespace std;
 
 Framebuffer::Framebuffer(const glm::vec2 &resolution, bool useDepthStencil)
         : mUseDepthStencil(useDepthStencil) {
+    //int numSamples = 8;
     glGenFramebuffers(1, &mFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 
     // Generate and bind a color texture
     glGenTextures(1, &mTexColorBuffer);
     glBindTexture(GL_TEXTURE_2D, mTexColorBuffer);
+    //glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mTexColorBuffer);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei) resolution.x, (GLsizei) resolution.y,
             0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    //glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, numSamples, GL_RGBA8,
+    //    (GLsizei) resolution.x, (GLsizei) resolution.y, false);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -28,6 +32,8 @@ Framebuffer::Framebuffer(const glm::vec2 &resolution, bool useDepthStencil)
     // Attach it to currently bound framebuffer object
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
             GL_TEXTURE_2D, mTexColorBuffer, 0);
+    //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+    //        GL_TEXTURE_2D_MULTISAMPLE, mTexColorBuffer, 0);
 
     // Generate and bind a depth/stencil render buffer object
     if (useDepthStencil) {
@@ -35,6 +41,8 @@ Framebuffer::Framebuffer(const glm::vec2 &resolution, bool useDepthStencil)
         glBindRenderbuffer(GL_RENDERBUFFER, mDepthStencilRBO);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8,
                 (GLsizei) resolution.x, (GLsizei) resolution.y);
+        //glRenderbufferStorageMultisample(GL_RENDERBUFFER, numSamples, GL_DEPTH24_STENCIL8,
+        //        (GLsizei) resolution.x, (GLsizei) resolution.y);
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
         // Attach RBO
