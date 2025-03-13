@@ -37,6 +37,9 @@ private:
 	PolylineRenderer();
 	PolylineRenderer(const PolylineRenderer &other);
 	PolylineRenderer &operator=(const PolylineRenderer &other);
+
+	void renderNonTransformed(Polyline &pl, const glm::mat4 &view=glm::mat4(1.0f));
+	void renderTransformed(Polyline &pl, const glm::mat4 &view=glm::mat4(1.0f));
 };
 
 #endif /* POLYLINERENDERER_H_ */
