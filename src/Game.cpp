@@ -79,11 +79,11 @@ Game::Game()
     Mix_Volume(-1, 64);
     Mix_VolumeMusic(40);
 
-    mShootSound = new SoundClip("../../res/shoot.wav");
+    mShootSound = new SoundClip("res/shoot.wav");
     mShootSound->setVolume(35);
-    mExplosionSound0 = new SoundClip("../../res/explosion-a.wav");
+    mExplosionSound0 = new SoundClip("res/explosion-a.wav");
     mExplosionSound0->setVolume(50);
-    mExplosionSound1 = new SoundClip("../../res/explosion-b.wav");
+    mExplosionSound1 = new SoundClip("res/explosion-b.wav");
     mExplosionSound1->setVolume(60);
 
     loadShaders();
@@ -118,7 +118,7 @@ void Game::reset() {
 void Game::mainloop() {
     PolylineRenderer plr(*plSh, mResolution);
 
-    Mix_Music *music = Mix_LoadMUS("../../res/drone.mp3");
+    Mix_Music *music = Mix_LoadMUS("res/drone.mp3");
     if (music) Mix_PlayMusic(music, -1);
 
 
@@ -348,11 +348,11 @@ void Game::randomizeAsteroid(Asteroid *a, int tier, double x, double y) {
 }
 
 void Game::loadShaders() {
-    plSh = new Shader("../../res/pl.vert.glsl", "../../res/pl.frag.glsl");
-    passSh = new Shader("../../res/pass.vert.glsl", "../../res/pass.frag.glsl");
-    blurSh = new Shader("../../res/blur.vert.glsl", "../../res/blur.frag.glsl");
-    addSh = new Shader("../../res/add.vert.glsl", "../../res/add.frag.glsl");
-    screenShakeSh = new Shader("../../res/screenshake.vert.glsl", "../../res/screenshake.frag.glsl");
+    plSh = new Shader("res/pl.vert.glsl", "res/pl.frag.glsl");
+    passSh = new Shader("res/pass.vert.glsl", "res/pass.frag.glsl");
+    blurSh = new Shader("res/blur.vert.glsl", "res/blur.frag.glsl");
+    addSh = new Shader("res/add.vert.glsl", "res/add.frag.glsl");
+    screenShakeSh = new Shader("res/screenshake.vert.glsl", "res/screenshake.frag.glsl");
 }
 
 void Game::loadFilters() {
