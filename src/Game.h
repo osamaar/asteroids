@@ -23,6 +23,9 @@ public:
     void updateAsteroids();
     void wrapAroundScreen(glm::dvec2 &vTarget);
     void generateAsteroids();
+
+    void useAlphaBlending();
+    void useAdditiveBlending();
 private:
     SDL_Window *mWin;
     SDL_GLContext mContext;
