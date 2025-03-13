@@ -21,6 +21,8 @@ public:
     void updatePlayerBullets();
     void updateEnemyBullets();
     void updateAsteroids();
+    void wrapAroundScreen(glm::dvec2 &vTarget);
+    void generateAsteroids();
 private:
     SDL_Window *mWin;
     SDL_GLContext mContext;
@@ -30,8 +32,5 @@ private:
     Ship mShip;
     ObjectPool<Asteroid> mAsteroidPool;
     ObjectPool<Bullet> mPlayerBulletPool;
-
-    void wrapAroundScreen(glm::dvec2 &vTarget);
-    void generateAsteroids();
 };
 

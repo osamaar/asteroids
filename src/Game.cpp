@@ -1,3 +1,6 @@
+#include "AddFilter.h"
+#include "BlurFilter.h"
+#include "PassthroughFilter.h"
 #include "Game.h"
 #include "Ship.h"
 #include "Asteroid.h"
@@ -73,9 +76,18 @@ void Game::reset() {
 }
 
 void Game::mainloop() {
-    Shader sh("../../res/pl.vert.glsl", "../../res/pl.frag.glsl");
+    Shader plSh("../../res/pl.vert.glsl", "../../res/pl.frag.glsl");
+    //Shader passSh("../../res/pass.vert.glsl", "../../res/pass.frag.glsl");
+    //Shader blurSh("../../res/blur.vert.glsl", "../../res/blur.frag.glsl");
+    //Shader addSh("../../res/add.vert.glsl", "../../res/add.frag.glsl");
 
-    PolylineRenderer plr(sh, glm::vec2(WIN_W, WIN_H));
+    //PassthroughFilter passFilter(passSh, glm::vec2(WIN_W, WIN_H));
+    //BlurFilter blurFilter(blurSh, glm::vec2(WIN_W, WIN_H));
+    //blurFilter.setIterations(1);
+    //AddFilter addFilter(addSh, glm::vec2(WIN_W, WIN_H));
+    //addFilter.setFactor(1.0);
+
+    PolylineRenderer plr(plSh, glm::vec2(WIN_W, WIN_H));
 
     reset();
 

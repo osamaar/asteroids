@@ -54,6 +54,12 @@
     <ClCompile Include="src\Bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\AddFilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PassthroughFilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h">
@@ -95,6 +101,12 @@
     <ClInclude Include="src\ObjectPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\AddFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PassthroughFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\blur.frag.glsl" />
@@ -103,5 +115,7 @@
     <None Include="res\pass.vert.glsl" />
     <None Include="res\pl.frag.glsl" />
     <None Include="res\pl.vert.glsl" />
+    <None Include="res\add.frag.glsl" />
+    <None Include="res\add.vert.glsl" />
   </ItemGroup>
 </Project>
