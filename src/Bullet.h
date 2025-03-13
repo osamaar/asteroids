@@ -18,10 +18,10 @@ public:
     Bullet();
     ~Bullet();
 
-    virtual void setPosition(double x, double y);
-    virtual void setRotation(double rotation);      // degrees
-    virtual void update();
-    virtual void render(PolylineRenderer &renderer);
+    virtual void setPosition(double x, double y) override;
+    virtual void setRotation(double rotation) override;      // degrees
+    virtual void update() override;
+    virtual void render(PolylineRenderer &renderer) override;
 private:
     Polyline mPl;
 };

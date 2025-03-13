@@ -17,10 +17,10 @@ public:
     void thrust(bool toggle);
     void shoot(ObjectPool<Bullet> &bulletPool);
     void setVelocity(double x, double y);
-    virtual void update();
-    virtual void setPosition(double x, double y);
-    virtual void setRotation(double rotation);
-    virtual void render(PolylineRenderer &renderer);
+    virtual void update() override;
+    virtual void setPosition(double x, double y) override;
+    virtual void setRotation(double rotation) override;
+    virtual void render(PolylineRenderer &renderer) override;
 private:
     glm::dvec2 mVelocity;
     double mAcceleration;
