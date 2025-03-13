@@ -69,11 +69,12 @@ void Game::mainloop() {
     Ship ship;
     ship.setPosition(WIN_W/2, WIN_H/2);
 
+    Bullet bullet;
+    bullet.setPosition(WIN_W/2, WIN_H/2 - 50);
+    bullet.setRotation(ship.getRotation());
+
     Asteroid asteroid;
     asteroid.setPosition(WIN_W/2+100, WIN_H/2);
-
-    Bullet bullet;
-    bullet.setPosition(WIN_W/2-100, WIN_H/2);
 
     while (!mDone) {
         // Init.

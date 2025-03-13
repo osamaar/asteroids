@@ -9,6 +9,9 @@
 #include "PolylineRenderer.h"
 #include <glm/glm.hpp>
 #include <vector>
+#include <iostream>
+
+using namespace std;
 
 Polyline::Polyline(bool closed)
 		: points()
@@ -50,7 +53,11 @@ glm::vec2 Polyline::pivot() {
         glm::vec2 total(0.0f);
         for (size_t i = 0; i < n; i++) {
             total += points[i];
+            //cout << "point: " << points[i].x << ", " << points[i].y;
+            //cout << " || total: " << total.x << ", " <<  total.y << endl;
         }
+        //auto cg = total / (float)n;
+        //cout << ">> centroid: " << cg.x << ", " <<  cg.y << endl;
         return total/(float)n;
     }
     default:

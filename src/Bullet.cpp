@@ -8,9 +8,12 @@ Bullet::Bullet()
     mPl.addPoint( 3, -1);
     mPl.addPoint( 3,  1);
     mPl.addPoint(-3,  2);
-    mPl.scale = 10;
+    //mPl.scale = 1.5;
     mPl.closed = true;
-    mPl.color = glm::vec4(0.1, 0.1, 1.0, 1.0);
+    mPl.color = glm::vec4(0.2, 0.3, 1.0, 1.0);
+    mPl.width = 1;
+    //mPl.PivotOn(Polyline::PivotCG);
+    mPl.PivotOn(Polyline::PivotOrigin);
 }
 
 Bullet::~Bullet() {

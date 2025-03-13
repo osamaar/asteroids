@@ -24,19 +24,20 @@ Ship::Ship()
     //mPl.addPoint(-3, 3);
 
 
-    mPl.addPoint(3, -3);
-    mPl.addPoint(0, -10);
-    mPl.addPoint(30, 0);
-    mPl.addPoint(0, 10);
-    mPl.addPoint(3, 3);
-
-    //mPl.addPoint(-10, 10);
+    mPl.addPoint(-7, -3);
+    mPl.addPoint(-10, -10);
+    mPl.addPoint(20, 0);
+    mPl.addPoint(-10, 10);
+    mPl.addPoint(-7, 3);
 
     mPl.closed = true;
-    mPl.PivotOn(Polyline::PivotCG);
     mPl.width = 2;
     //mPl.scale = 4;
     setRotation(-twoPi / 4);
+
+    // Origin pivot simplifies locating bullets
+    mPl.PivotOn(Polyline::PivotOrigin);
+    //mPl.PivotOn(Polyline::PivotCG);
 }
 
 
