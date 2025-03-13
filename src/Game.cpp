@@ -49,7 +49,7 @@ Game::~Game() {
 }
 
 void Game::mainloop() {
-    Shader sh("../res/pl.vert.glsl", "../res/pl.frag.glsl");
+    Shader sh("../../res/pl.vert.glsl", "../../res/pl.frag.glsl");
     Polyline pl;
     pl.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     pl.width = 4;
