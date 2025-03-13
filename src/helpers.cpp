@@ -14,6 +14,9 @@
 using namespace std;
 
 void checkGLErrors(const char *file, int line) {
+#   ifdef NDEBUG
+        return;
+#   endif
     GLenum err (glGetError());
 
     while(err!=GL_NO_ERROR) {
