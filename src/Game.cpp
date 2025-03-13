@@ -1,3 +1,4 @@
+#include "Sound.h"
 #include "AddFilter.h"
 #include "BlurFilter.h"
 #include "PassthroughFilter.h"
@@ -10,6 +11,7 @@
 #include "Shader.h"
 #include "helpers.h"
 #include <glm/glm.hpp>
+#include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <GL/GL.h>
@@ -25,7 +27,15 @@ Game::Game()
         , mAsteroidPool(100)
         , mPlayerBulletPool(400) {
 
-    SDL_Init(SDL_INIT_EVERYTHING);
+    int success = false;
+    success = SDL_Init(SDL_INIT_EVERYTHING);
+    if (success < 0) return;
+
+    success = Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
+    if (success < 0) return;
+
+    success = Mix_Init(MIX_INIT_MP3);
+    if (success == 0) return;
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                         SDL_GL_CONTEXT_PROFILE_CORE);
@@ -63,11 +73,18 @@ Game::Game()
     glEnable(GL_MULTISAMPLE);
 
     glViewport(0, 0, mResolution.x, mResolution.y);
+
+    mShootSound = new Sound("../../res/shoot.wav");
+    mShootSound->setVolume(55);
 }
 
 Game::~Game() {
+    if (mShootSound) delete mShootSound;
+
+    Mix_Quit();
     SDL_GL_DeleteContext(mContext);
     SDL_DestroyWindow(mWin);
+    SDL_Quit();
 }
 
 void Game::reset() {
@@ -93,6 +110,10 @@ void Game::mainloop() {
     addFilter.setFactor(2);
 
     PolylineRenderer plr(plSh, mResolution);
+
+    Mix_Music *music = Mix_LoadMUS("../../res/drone.mp3");
+    if (music) Mix_PlayMusic(music, -1);
+
 
     reset();
 
@@ -217,6 +238,7 @@ void Game::update(int dt) {
 void Game::updateShip(Ship &ship, int dt) {
     if (mShooting) {
         ship.shoot(mPlayerBulletPool, dt);
+        mShootSound->play();
     }
 
     ship.update(dt);

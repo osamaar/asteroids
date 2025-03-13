@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include "Sound.h"
 #include "Ship.h"
 #include "Asteroid.h"
 #include "Bullet.h"
@@ -38,5 +39,6 @@ private:
     ObjectPool<Asteroid> mAsteroidPool;
     ObjectPool<Bullet> mPlayerBulletPool;
     glm::ivec2 mResolution;
+    Sound *mShootSound;
 };
 
