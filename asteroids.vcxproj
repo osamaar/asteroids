@@ -169,6 +169,7 @@
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Explosion.cpp" />
     <ClCompile Include="src\MultisampleFramebuffer.cpp" />
+    <ClCompile Include="src\ParticleSystem.cpp" />
     <ClCompile Include="src\PassthroughFilter.cpp" />
     <ClCompile Include="src\ScanlineFilter.cpp" />
     <ClCompile Include="src\ScreenShakeFilter.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="src\GenericFramebuffer.h" />
     <ClInclude Include="src\MultisampleFramebuffer.h" />
     <ClInclude Include="src\ObjectPool.h" />
+    <ClInclude Include="src\ParticleSystem.h" />
     <ClInclude Include="src\PassthroughFilter.h" />
     <ClInclude Include="src\ScanlineFilter.h" />
     <ClInclude Include="src\ScreenShakeFilter.h" />
