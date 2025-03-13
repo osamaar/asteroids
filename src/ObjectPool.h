@@ -80,8 +80,10 @@ private:
     std::size_t mActiveCount;
 };
 
+template <typename T>
 struct PoolState {
     PoolState() : alive(false) {}
     PoolState(bool state) : alive(state) {}
     bool alive;
+    T *next;
 };

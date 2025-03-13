@@ -79,7 +79,8 @@ Game::Game()
     glViewport(0, 0, mResolution.x, mResolution.y);
     SDL_ShowCursor(SDL_DISABLE);
 
-    Mix_Volume(-1, 64);
+    Mix_AllocateChannels(32);
+    Mix_Volume(-1, 128);
     Mix_VolumeMusic(40);
 
     mShootSound = new SoundClip("res/shoot.wav");
@@ -279,9 +280,9 @@ void Game::updateShip(Ship &ship, int dt) {
     bool shotFired = false;
     if (mShooting) {
         shotFired = ship.shoot(mPlayerBulletPool, dt);
-        mShootSound->play();
         if (shotFired) {
             screenShakeFilter->init(0.007);
+            mShootSound->play();
         }
     }
 

@@ -17,7 +17,7 @@ SoundClip::~SoundClip() {
 }
 
 void SoundClip::play() {
-    Mix_HaltChannel(mChannel);
+    //Mix_HaltChannel(mChannel);
     mChannel = Mix_PlayChannel(-1, mAudio, 0);
 }
 
