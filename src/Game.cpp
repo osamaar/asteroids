@@ -16,9 +16,9 @@ const int WIN_H = 600;
 
 Game::Game()
         : mDone(false)
-        , mThrusting(false)
+        , mPause(false)
         , mShooting(false)
-        , mRotating(0)
+        , mShip()
         , mAsteroidPool(100)
         , mPlayerBulletPool(400) {
 
@@ -62,15 +62,22 @@ Game::~Game() {
     SDL_DestroyWindow(mWin);
 }
 
+void Game::reset() {
+    mShip.setPosition(WIN_W/2, WIN_H/2);
+    mShip.setRotation(glm::radians<double>(-90));
+    mShip.setVelocity(0, 0);
+    mAsteroidPool.releaseAll();
+    mPlayerBulletPool.releaseAll();
+    generateAsteroids();
+    mPause = false;
+}
+
 void Game::mainloop() {
     Shader sh("../../res/pl.vert.glsl", "../../res/pl.frag.glsl");
 
     PolylineRenderer plr(sh, glm::vec2(WIN_W, WIN_H));
 
-    Ship ship;
-    ship.setPosition(WIN_W/2, WIN_H/2);
-
-    generateAsteroids();
+    reset();
 
     while (!mDone) {
         // Init.
@@ -82,17 +89,14 @@ void Game::mainloop() {
         handleInput();
 
         // Update.
-        updateShip(ship);
-        updatePlayerBullets();
-        updateEnemyBullets();
-        updateAsteroids();
+        update();
 
         // Draw.
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
         plr.begin();
-        ship.render(plr);
+        mShip.render(plr);
         //asteroid->render(plr);
 
         mAsteroidPool.apply([&](Asteroid& a) {
@@ -121,22 +125,26 @@ void Game::handleInput() {
         } else if (e.type == SDL_KEYDOWN) {
             if (e.key.keysym.sym == SDLK_ESCAPE) {
                 mDone = true;
+            } else if (e.key.keysym.sym == SDLK_PAUSE) {
+                mPause = !mPause;
+            } else if (e.key.keysym.sym == SDLK_RETURN) {
+                reset();
             } else if (e.key.keysym.sym == SDLK_UP) {
-                mThrusting = true;
+                mShip.thrust(true);
             } else if (e.key.keysym.sym == SDLK_LEFT) {
-                mRotating = -1;
+                mShip.rotate(-1);
             } else if (e.key.keysym.sym == SDLK_RIGHT) {
-                mRotating = 1;
+                mShip.rotate(1);
             } else if (e.key.keysym.sym == SDLK_SPACE) {
                 mShooting = true;
             }
         } else if (e.type == SDL_KEYUP) {
             if (e.key.keysym.sym == SDLK_UP) {
-                mThrusting = false;
+                mShip.thrust(false);
             } else if (e.key.keysym.sym == SDLK_LEFT) {
-                mRotating = 0;
+                mShip.rotate(0);
             } else if (e.key.keysym.sym == SDLK_RIGHT) {
-                mRotating = 0;
+                mShip.rotate(0);
             } else if (e.key.keysym.sym == SDLK_SPACE) {
                 mShooting = false;
             }
@@ -144,22 +152,36 @@ void Game::handleInput() {
     }
 }
 
-void Game::updateShip(Ship &ship) {
-    if (mThrusting) {
-        ship.thrust(true);
-    } else {
-        ship.thrust(false);
+void Game::update() {
+    if (!mPause) {
+        updateShip(mShip);
+        updatePlayerBullets();
+        updateEnemyBullets();
+        updateAsteroids();
     }
 
+    if (mAsteroidPool.getActiveCount() == 0) {
+        mPause = true;
+    }
+}
+
+void Game::updateShip(Ship &ship) {
     if (mShooting) {
         ship.shoot(mPlayerBulletPool);
     }
 
-    ship.rotate(mRotating);
+    ship.update();
+
     auto shipPos = ship.getPosition();
     wrapAroundScreen(shipPos);
     ship.setPosition(shipPos.x, shipPos.y);
-    ship.update();
+
+    mAsteroidPool.apply([&](Asteroid& a) {
+        if (collides(a, ship)) {
+            mPause = true;
+        }
+    });
+
 }
 
 void Game::updatePlayerBullets() {
@@ -172,7 +194,8 @@ void Game::updatePlayerBullets() {
         mAsteroidPool.apply([&](Asteroid& a) {
             if (collides(a, b)) {
                 a.poolState.alive = false;
-                b.poolState.alive = false;
+                mAsteroidPool.releaseObject(a);
+                mPlayerBulletPool.releaseObject(b);
             }
         });
     });

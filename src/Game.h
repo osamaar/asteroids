@@ -13,8 +13,10 @@ public:
     Game();
     ~Game();
 
+    void reset();
     void mainloop();
     void handleInput();
+    void update();
     void updateShip(Ship &ship);
     void updatePlayerBullets();
     void updateEnemyBullets();
@@ -23,9 +25,9 @@ private:
     SDL_Window *mWin;
     SDL_GLContext mContext;
     bool mDone;
-    bool mThrusting;
+    bool mPause;
     bool mShooting;
-    int mRotating;
+    Ship mShip;
     ObjectPool<Asteroid> mAsteroidPool;
     ObjectPool<Bullet> mPlayerBulletPool;
 

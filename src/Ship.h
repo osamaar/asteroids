@@ -16,6 +16,7 @@ public:
     void rotate(int dRotation);
     void thrust(bool toggle);
     void shoot(ObjectPool<Bullet> &bulletPool);
+    void setVelocity(double x, double y);
     virtual void update();
     virtual void setPosition(double x, double y);
     virtual void setRotation(double rotation);

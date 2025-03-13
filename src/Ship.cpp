@@ -14,8 +14,9 @@ Ship::Ship()
         , mMaxSpeed(4.0)
         , mPl()
         , mThrusting(false)
-        , mShootRate(5.0/60.0)
-        , mShootElapsed(0) {
+        , mShootRate(7.0/60.0)
+        , mShootElapsed(0){
+    mCollisionRadius = 5;
     mPl.color = glm::vec4(0.4, 1.0, 0.4, 1.0);
 
     //mPl.addPoint(-10, 10);
@@ -68,6 +69,11 @@ void Ship::shoot(ObjectPool<Bullet>& bulletPool) {
             bullet->dirNormal = glm::normalize(dirVec);
         }
     }
+}
+
+void Ship::setVelocity(double x, double y) {
+    mVelocity.x = x;
+    mVelocity.y = y;
 }
 
 void Ship::update() {

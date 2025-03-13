@@ -7,14 +7,15 @@
 template<typename T>
 class ObjectPool {
 public:
-    ObjectPool() : mPool(10) { }
-    ObjectPool(int size) : mPool(size) { }
+    ObjectPool() : mPool(10), mActiveCount(0) { }
+    ObjectPool(int size) : mPool(size), mActiveCount(0) { }
     ~ObjectPool() { }
 
     T *aquireObject() { 
         for (auto&& obj : mPool) {
             if (!obj.poolState.alive) {
                 obj.poolState.alive = true;
+                mActiveCount++;
                 return &obj;
             }
         }
@@ -23,6 +24,14 @@ public:
 
     void releaseObject(T &obj) {
         obj.poolState.alive = false;
+        mActiveCount--;
+    }
+
+    void releaseAll() {
+        for (auto&& obj : mPool) {
+            obj.poolState.alive = false;
+            mActiveCount = 0;
+        }
     }
 
     void apply(std::function<void(T&)> fn) {
@@ -31,9 +40,13 @@ public:
             fn(obj);
         }
     }
+
+    int size() { return mPool.size(); }
+    int getActiveCount() { return mActiveCount; }
     //T *extend(int amount) { }
 private:
     std::vector<T> mPool;
+    int mActiveCount;
 };
 
 struct PoolState {
