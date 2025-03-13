@@ -185,7 +185,9 @@ void Shader::sendUniformData(const GLuint id, const GLint &value, const bool tra
 }
 
 void Shader::sendUniformData(const GLuint id, const GLfloat &value, const bool transpose) {
+    cout << ">>>>> Setting glUniform1f: " << value << endl;
     glUniform1f(id, value);
+    checkGLErrors(__FILE__, __LINE__);
 }
 
 void Shader::sendUniformData(const GLuint id, const glm::vec2 &value, const bool transpose) {

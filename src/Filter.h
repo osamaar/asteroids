@@ -2,7 +2,8 @@
 #define FILTER_H_
 
 
-#include "Framebuffer.h"
+#include "MultisampleFramebuffer.h"
+#include "GenericFramebuffer.h"
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <glm/glm.hpp>
@@ -50,7 +51,7 @@ public:
 
     // All filter logic happens here. Bind/unbind framebuffers/shaders as
     // needed and render between them.
-    virtual void process() { }
+    virtual void process();
 
     // Render screen quad texture from our processed FB to whatever FB is
     // active now. Use renderFramebuffer() here. Simplest case is provided.
@@ -59,7 +60,7 @@ public:
     //void process();
 protected:
     glm::vec2 mResolution;
-    Framebuffer mInputFramebuffer;
+    MultisampleFramebuffer mInputFramebuffer;
 
     // Registers framebuffer color texture sampler uniform with key=0.
     // Can include more uniforms but would require revising all derived classes
@@ -67,8 +68,8 @@ protected:
     void registerCommonShaderUniforms(Shader &shader);
     void setCommonShaderUniforms(Shader &shader);
 
-    void bindFramebuffer(Framebuffer &fb);
-    void unbindFramebuffer(Framebuffer &fb);
+    void bindFramebuffer(GenericFramebuffer &fb);
+    void unbindFramebuffer(GenericFramebuffer &fb);
 
     // This is a noop: base class has no param to update
     // Called from renderContents(). Override for own logic.
@@ -77,7 +78,8 @@ protected:
     // Render screen quad texture associated with a given framebuffer to
     // whatever FB is active now. Uses explicit uniform locations. Loc 0 is
     // screen quad texture.
-    void renderFramebuffer(Framebuffer &fb, Shader &shader);
+    void renderFramebuffer(GenericFramebuffer &fb, Shader &shader);
+    virtual GLuint getGLTexture();
 private:
     GLuint mVAO, mVBO, mEBO;
 };

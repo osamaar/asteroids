@@ -1,4 +1,5 @@
 #include "AddFilter.h"
+#include "helpers.h"
 #include <vector>
 #include <iostream>
 #include <cstring>
@@ -9,9 +10,13 @@ AddFilter::AddFilter(Shader &shader,
         const glm::vec2 &resolution)
         : Filter(resolution)
         , mShader(&shader)
-        , mFactor(1.0) {
+        , mFactor(1.0)
+        , mAddFramebuffer(resolution) {
+    mShader->bind();
     registerCommonShaderUniforms(*mShader);
-    mShader->registerUniform("factor", 1);
+    mShader->registerUniform("addTex", 1);
+    mShader->registerUniform("factor", 2);
+    mShader->unbind();
 }
 
 AddFilter::~AddFilter() {
@@ -20,11 +25,27 @@ AddFilter::~AddFilter() {
 
 
 void AddFilter::renderContent() {
-    mShader->setUniform<GLfloat>(1, mFactor);
+    bool success;
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mAddFramebuffer.getGLTexture());
+    checkGLErrors(__FILE__, __LINE__);
+
+    mShader->bind();
+    success = mShader->setUniform<GLuint>(1, 1);
+    cout << "Setting uniform 'addTex': " << success << endl;
+    success = mShader->setUniform<GLfloat>(2, mFactor);
+    cout << "Setting uniform 'factor': " << success << endl;
+    checkGLErrors(__FILE__, __LINE__);
+
     renderFramebuffer(mInputFramebuffer, *mShader);
 }
 
 void AddFilter::setFactor(float factor) {
     mFactor = factor;
+}
+
+void AddFilter::bindAddFramebuffer() {
+    bindFramebuffer(mAddFramebuffer);
 }
 

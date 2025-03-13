@@ -1,4 +1,4 @@
-//#include "AddFilter.h"
+#include "AddFilter.h"
 #include "BlurFilter.h"
 #include "PassthroughFilter.h"
 #include "Game.h"
@@ -79,13 +79,13 @@ void Game::mainloop() {
     Shader plSh("../../res/pl.vert.glsl", "../../res/pl.frag.glsl");
     Shader passSh("../../res/pass.vert.glsl", "../../res/pass.frag.glsl");
     Shader blurSh("../../res/blur.vert.glsl", "../../res/blur.frag.glsl");
-    //Shader addSh("../../res/add.vert.glsl", "../../res/add.frag.glsl");
+    Shader addSh("../../res/add.vert.glsl", "../../res/add.frag.glsl");
 
     PassthroughFilter passFilter(passSh, glm::vec2(WIN_W, WIN_H));
-    BlurFilter blurFilter(blurSh, glm::vec2(WIN_W, WIN_H));
-    blurFilter.setIterations(4);
-    //AddFilter addFilter(addSh, glm::vec2(WIN_W, WIN_H));
-    //addFilter.setFactor(1.0);
+    BlurFilter blurFilter(blurSh, glm::vec2(WIN_W/2, WIN_H/2));
+    blurFilter.setIterations(7);
+    AddFilter addFilter(addSh, glm::vec2(WIN_W, WIN_H));
+    addFilter.setFactor(2);
 
     PolylineRenderer plr(plSh, glm::vec2(WIN_W, WIN_H));
 
@@ -104,6 +104,7 @@ void Game::mainloop() {
         update();
 
         // Draw.
+        glEnable(GL_MULTISAMPLE);
         passFilter.bind();
         useAlphaBlending();
         glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -130,17 +131,27 @@ void Game::mainloop() {
         passFilter.process();
         passFilter.unbind();
 
-        // render to backbuffer
-        passFilter.renderContent();
-
         blurFilter.bind();
         passFilter.renderContent();
         blurFilter.process();
         blurFilter.unbind();
 
-        // render to backbuffer again
-        useAdditiveBlending();
+        addFilter.bind();
+        passFilter.renderContent();
+        // must get blurred texture every frame due to its alternating buffers
+        addFilter.bindAddFramebuffer();
         blurFilter.renderContent();
+        addFilter.process();
+        addFilter.unbind();
+
+
+        // render to backbuffer
+        glEnable(GL_MULTISAMPLE);
+        addFilter.renderContent();
+
+        // render to backbuffer again
+        //useAdditiveBlending();
+        //blurFilter.renderContent();
 
         SDL_GL_SwapWindow(mWin);
     }

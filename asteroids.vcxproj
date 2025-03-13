@@ -128,6 +128,8 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>D:\dev\lib\SDL2-2.0.5\include;C:\Users\Osama\dev\lib\glew-2.0.0\include;C:\Users\Osama\dev\lib\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -162,6 +164,7 @@
     <ClCompile Include="src\Asteroid.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\MultisampleFramebuffer.cpp" />
     <ClCompile Include="src\PassthroughFilter.cpp" />
     <ClCompile Include="src\Ship.cpp" />
     <ClCompile Include="src\BlurFilter.cpp" />
@@ -179,6 +182,8 @@
     <ClInclude Include="src\Asteroid.h" />
     <ClInclude Include="src\Bullet.h" />
     <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\GenericFramebuffer.h" />
+    <ClInclude Include="src\MultisampleFramebuffer.h" />
     <ClInclude Include="src\ObjectPool.h" />
     <ClInclude Include="src\PassthroughFilter.h" />
     <ClInclude Include="src\Ship.h" />

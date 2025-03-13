@@ -4,6 +4,8 @@
 
 #include "Filter.h"
 #include "Shader.h"
+#include "Framebuffer.h"
+#include "GenericFramebuffer.h"
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <glm/glm.hpp>
@@ -19,11 +21,12 @@ public:
     virtual void unbind();
     virtual void process();
     virtual void renderContent();
+    virtual GLuint getGLTexture();
     void setIterations(int n);
 private:
     Shader *mShader;
     Framebuffer mAlterFramebuffer;
-    Framebuffer *mCurrentTarget;
+    GenericFramebuffer *mCurrentTarget;
     int mIterations;
 
     void alternateFramebuffers();

@@ -1,6 +1,7 @@
 #include "helpers.h"
 #include "Filter.h"
-#include "Framebuffer.h"
+#include "MultisampleFramebuffer.h"
+#include "GenericFramebuffer.h"
 #include "Shader.h"
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -87,8 +88,14 @@ void Filter::bind() {
     unbindFramebuffer(mInputFramebuffer);
 }
 
+ void Filter::process() {
+    checkGLErrors(__FILE__, __LINE__);
+    mInputFramebuffer.resolve();
+    checkGLErrors(__FILE__, __LINE__);
+ }
+
 void Filter::registerCommonShaderUniforms(Shader &shader) {
-    assert(shader.registerUniform("screenQuadTex", UNIFORM_KEY_0));
+    shader.registerUniform("screenQuadTex", UNIFORM_KEY_0);
 }
 
 void Filter::setCommonShaderUniforms(Shader &shader) {
@@ -97,31 +104,41 @@ void Filter::setCommonShaderUniforms(Shader &shader) {
      shader.setUniform<GLuint>(UNIFORM_KEY_0, 0);
 
 }
-void Filter::bindFramebuffer(Framebuffer &fb) {
+void Filter::bindFramebuffer(GenericFramebuffer &fb) {
     fb.bind();
 
     // call glViewport adjust resolution to framebuffer size.
     glViewport(0, 0, (GLsizei) mResolution.x, (GLsizei) mResolution.y);
 }
 
-void Filter::unbindFramebuffer(Framebuffer &fb) {
+void Filter::unbindFramebuffer(GenericFramebuffer &fb) {
     fb.unbind();
 }
 
-void Filter::renderFramebuffer(Framebuffer &fb, Shader &shader) {
+void Filter::renderFramebuffer(GenericFramebuffer &fb, Shader &shader) {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, fb.getGLTexture());
+    checkGLErrors(__FILE__, __LINE__);
 
     shader.bind();
+    checkGLErrors(__FILE__, __LINE__);
 
     setCommonShaderUniforms(shader);
+    checkGLErrors(__FILE__, __LINE__);
     glBindVertexArray(mVAO);
+    checkGLErrors(__FILE__, __LINE__);
 
     updateParameters();
+    checkGLErrors(__FILE__, __LINE__);
 
     // Render framebuffer quad
     // attributes: pos, texture coord, uniforms: none
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    checkGLErrors(__FILE__, __LINE__);
+}
+
+GLuint Filter::getGLTexture() {
+    return mInputFramebuffer.getGLTexture();
 }
 
 //void Filter::process() {

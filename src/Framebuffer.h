@@ -2,13 +2,14 @@
 #define FRAMEBUFFE_H_
 
 
+#include "GenericFramebuffer.h"
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <glm/glm.hpp>
 
 class Shader;
 
-class Framebuffer{
+class Framebuffer : public GenericFramebuffer {
 public:
     Framebuffer(const glm::vec2 &resolution, bool useDepthStencil=false);
     ~Framebuffer();

@@ -1,4 +1,6 @@
 #include "BlurFilter.h"
+#include "Framebuffer.h"
+#include "GenericFramebuffer.h"
 #include <vector>
 #include <iostream>
 #include <cstring>
@@ -19,8 +21,8 @@ BlurFilter::BlurFilter(Shader &shader,
         , mIterations(1) {
     mShader->bind();
     registerCommonShaderUniforms(*mShader);
-    assert(mShader->registerUniform("resolution", UNIFORM_KEY_1));
-    assert(mShader->registerUniform("direction", UNIFORM_KEY_2));
+    mShader->registerUniform("resolution", UNIFORM_KEY_1);
+    mShader->registerUniform("direction", UNIFORM_KEY_2);
     mShader->unbind();
 }
 
@@ -33,6 +35,8 @@ void BlurFilter::unbind() {
 }
 
 void BlurFilter::process() {
+    mInputFramebuffer.resolve();
+    mInputFramebuffer.bind();
     // IMPORTANT: Point to input framebuffer as active framebuffer.
     mCurrentTarget = &mInputFramebuffer;
 
@@ -59,7 +63,6 @@ void BlurFilter::process() {
     // set direction uniform to (1.0, 0.0) -> horizontal pass
     mShader->setUniform<glm::vec2>(UNIFORM_KEY_2, glm::vec2(1.0, 0.0));
     renderPass();
-
 }
 
 void BlurFilter::renderContent() {
@@ -72,6 +75,10 @@ void BlurFilter::renderContent() {
     // set direction uniform to (0.0, 1.0) -> vertical pass
     mShader->setUniform<glm::vec2>(UNIFORM_KEY_2, glm::vec2(0.0, 1.0));
     renderFramebuffer(*mCurrentTarget, *mShader);
+}
+
+GLuint BlurFilter::getGLTexture() {
+    return mCurrentTarget->getGLTexture();
 }
 
 void BlurFilter::alternateFramebuffers() {
@@ -87,7 +94,7 @@ void BlurFilter::alternateFramebuffers() {
 }
 
 void BlurFilter::renderPass() {
-    Framebuffer *oldTarget = mCurrentTarget;
+    GenericFramebuffer *oldTarget = mCurrentTarget;
 
     // Switch to the other framebuffer
     alternateFramebuffers();
