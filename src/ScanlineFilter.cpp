@@ -12,7 +12,7 @@ ScanlineFilter::ScanlineFilter(Shader &shader,
         const glm::vec2 &resolution)
         : Filter(resolution)
         , mShader(&shader)
-        , mChromAbb(0.001f)
+        , mChromAbb(0.0012f)
         , mVignette(0.4f) {
     registerCommonShaderUniforms(*mShader);
     mShader->registerUniform("chromAbb", 1);
