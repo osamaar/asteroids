@@ -14,9 +14,14 @@ public:
 
     virtual void setPosition(double x, double y);
     virtual void setRotation(double rotation);      // degrees
+    virtual void update() = 0;
     virtual void render(PolylineRenderer &renderer) = 0;
 protected:
     glm::dvec2 mPosition;
     double mRotation;
+    double mCollisionRadius;
+
+    friend bool collides(Entity &e0, Entity &e1);
 };
 
+bool collides(Entity &e0, Entity &e1);

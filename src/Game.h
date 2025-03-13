@@ -1,7 +1,11 @@
 #pragma once
 
 
+#include "ObjectPool.h"
+#include "Asteroid.h"
+#include "Bullet.h"
 #include <SDL2/SDL.h>
+#include <vector>
 
 class Game {
 public:
@@ -17,5 +21,7 @@ private:
     bool mThrusting;
     bool mShooting;
     int mRotating;
+    ObjectPool<Asteroid> mAsteroidPool;
+    ObjectPool<Bullet> mBulletPool;
 };
 

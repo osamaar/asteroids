@@ -3,7 +3,8 @@
 
 Entity::Entity()
         : mPosition(0.0) 
-        , mRotation(0.0) {
+        , mRotation(0.0)
+        , mCollisionRadius(0.0) {
 
 }
 
@@ -28,3 +29,7 @@ void Entity::setRotation(double rotation) {
     mRotation = rotation;
 }
 
+bool collides(Entity &e0, Entity &e1) {
+    double distance = glm::length(e1.mPosition - e0.mPosition);
+    return (distance <= e0.mCollisionRadius + e1.mCollisionRadius);
+}

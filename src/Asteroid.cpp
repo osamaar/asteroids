@@ -8,7 +8,8 @@ using namespace std;
 const double twoPi = 2.0 * glm::pi<double>();
 
 Asteroid::Asteroid()
-        : mPl()
+        : poolState()
+        , mPl()
         , mRadius(40.0) {
     createShape();
 }
@@ -67,5 +68,9 @@ void Asteroid::setPosition(double x, double y) {
 void Asteroid::setRotation(double rotation) {
     Entity::setRotation(rotation);
     mPl.rotation = rotation;
+}
+
+void Asteroid::update() {
+
 }
 

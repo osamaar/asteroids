@@ -13,7 +13,7 @@ public:
 
     void rotate(int dRotation);
     void thrust(bool toggle);
-    void update();
+    virtual void update();
     virtual void setPosition(double x, double y);
     virtual void setRotation(double rotation);
     virtual void render(PolylineRenderer &renderer);

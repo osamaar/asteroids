@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Ship.h"
 #include "Asteroid.h"
+#include "Bullet.h"
 #include "Polyline.h"
 #include "PolylineRenderer.h"
 #include "Shader.h"
@@ -16,7 +17,9 @@ Game::Game()
         : mDone(false)
         , mThrusting(false)
         , mShooting(false)
-        , mRotating(0) {
+        , mRotating(0)
+        , mAsteroidPool(100)
+        , mBulletPool(400) {
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -69,6 +72,8 @@ void Game::mainloop() {
     Asteroid asteroid;
     asteroid.setPosition(WIN_W/2+100, WIN_H/2);
 
+    Bullet bullet;
+    bullet.setPosition(WIN_W/2-100, WIN_H/2);
 
     while (!mDone) {
         // Init.
@@ -96,11 +101,12 @@ void Game::mainloop() {
 
         // Draw.
         glClearColor(0.0, 0.0, 0.0, 0.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         plr.begin();
         ship.render(plr);
         asteroid.render(plr);
+        bullet.render(plr);
         plr.end();
 
         SDL_GL_SwapWindow(mWin);
