@@ -63,10 +63,13 @@
     <ClCompile Include="src\MultisampleFramebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ShakeFilter.cpp">
+    <ClCompile Include="src\SoundClip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SoundClip.cpp">
+    <ClCompile Include="src\Explosion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScreenShakeFilter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -122,10 +125,13 @@
     <ClInclude Include="src\GenericFramebuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ShakeFilter.h">
+    <ClInclude Include="src\SoundClip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SoundClip.h">
+    <ClInclude Include="src\Explosion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ScreenShakeFilter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

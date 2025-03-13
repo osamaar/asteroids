@@ -166,9 +166,10 @@
     <ClCompile Include="src\Asteroid.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\Explosion.cpp" />
     <ClCompile Include="src\MultisampleFramebuffer.cpp" />
     <ClCompile Include="src\PassthroughFilter.cpp" />
-    <ClCompile Include="src\ShakeFilter.cpp" />
+    <ClCompile Include="src\ScreenShakeFilter.cpp" />
     <ClCompile Include="src\Ship.cpp" />
     <ClCompile Include="src\BlurFilter.cpp" />
     <ClCompile Include="src\Filter.cpp" />
@@ -186,11 +187,12 @@
     <ClInclude Include="src\Asteroid.h" />
     <ClInclude Include="src\Bullet.h" />
     <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\Explosion.h" />
     <ClInclude Include="src\GenericFramebuffer.h" />
     <ClInclude Include="src\MultisampleFramebuffer.h" />
     <ClInclude Include="src\ObjectPool.h" />
     <ClInclude Include="src\PassthroughFilter.h" />
-    <ClInclude Include="src\ShakeFilter.h" />
+    <ClInclude Include="src\ScreenShakeFilter.h" />
     <ClInclude Include="src\Ship.h" />
     <ClInclude Include="src\BlurFilter.h" />
     <ClInclude Include="src\Filter.h" />
