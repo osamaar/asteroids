@@ -14,5 +14,8 @@ private:
     SDL_Window *mWin;
     SDL_GLContext mContext;
     bool mDone;
+    bool mThrusting;
+    bool mShooting;
+    int mRotating;
 };
 

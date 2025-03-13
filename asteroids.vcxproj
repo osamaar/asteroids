@@ -96,7 +96,7 @@
       <AdditionalIncludeDirectories>D:\dev\lib\SDL2-2.0.5\include;C:\Users\Osama\dev\lib\glew-2.0.0\include;C:\Users\Osama\dev\lib\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2main.lib;glew32sd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\Osama\dev\lib\SDL2-2.0.5\VisualC\Win32\Debug;C:\Users\Osama\dev\lib\glew-2.0.0\lib\Debug\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -113,7 +113,7 @@
       <AdditionalIncludeDirectories>D:\dev\lib\SDL2-2.0.5\include;C:\Users\Osama\dev\lib\glew-2.0.0\include;C:\Users\Osama\dev\lib\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -130,7 +130,7 @@
       <AdditionalIncludeDirectories>D:\dev\lib\SDL2-2.0.5\include;C:\Users\Osama\dev\lib\glew-2.0.0\include;C:\Users\Osama\dev\lib\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -151,13 +151,16 @@
       <AdditionalIncludeDirectories>D:\dev\lib\SDL2-2.0.5\include;C:\Users\Osama\dev\lib\glew-2.0.0\include;C:\Users\Osama\dev\lib\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Asteroid.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\Ship.cpp" />
     <ClCompile Include="src\BlurFilter.cpp" />
     <ClCompile Include="src\Filter.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
@@ -169,6 +172,9 @@
     <ClCompile Include="src\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Asteroid.h" />
+    <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\Ship.h" />
     <ClInclude Include="src\BlurFilter.h" />
     <ClInclude Include="src\Filter.h" />
     <ClInclude Include="src\Framebuffer.h" />

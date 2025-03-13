@@ -9,6 +9,7 @@
 #include <GL/gl.h>
 #include <iostream>
 #include <string>
+#include <cstdlib>
 
 using namespace std;
 
@@ -29,4 +30,9 @@ void checkGLErrors(const char *file, int line) {
             cerr << "GL_" << error.c_str() <<" - "<<file<<":"<<line<<endl;
             err=glGetError();
     }
+}
+
+double randRangeNaive(double start, double end) {
+    double range = end - start;
+    return start + range * (double) rand() / RAND_MAX;
 }
