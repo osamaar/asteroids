@@ -1,3 +1,4 @@
+#include "ScanlineFilter.h"
 #include "ScreenShakeFilter.h"
 #include "SoundClip.h"
 #include "AddFilter.h"
@@ -186,11 +187,16 @@ void Game::mainloop() {
         screenShakeFilter->process();
         screenShakeFilter->unbind();
 
+        scanlineFilter->bind();
+        screenShakeFilter->renderContent();
+        scanlineFilter->process();
+        scanlineFilter->unbind();
+
         // render to backbuffer
         glEnable(GL_MULTISAMPLE);
         //glClearColor(0.2, 0.2, 0.2, 0.0);
         //glClear(GL_COLOR_BUFFER_BIT);
-        screenShakeFilter->renderContent();
+        scanlineFilter->renderContent();
 
         // render to backbuffer again
         //useAdditiveBlending();
@@ -353,6 +359,7 @@ void Game::loadShaders() {
     blurSh = new Shader("res/blur.vert.glsl", "res/blur.frag.glsl");
     addSh = new Shader("res/add.vert.glsl", "res/add.frag.glsl");
     screenShakeSh = new Shader("res/screenshake.vert.glsl", "res/screenshake.frag.glsl");
+    scanlineSh = new Shader("res/scanline.vert.glsl", "res/scanline.frag.glsl");
 }
 
 void Game::loadFilters() {
@@ -362,6 +369,7 @@ void Game::loadFilters() {
     addFilter = new AddFilter(*addSh, mResolution);
     addFilter->setFactor(2);
     screenShakeFilter = new ScreenShakeFilter(*screenShakeSh, mResolution);
+    scanlineFilter = new ScanlineFilter(*scanlineSh, mResolution);
 }
 
 void Game::unloadShaders() {
