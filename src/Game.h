@@ -5,6 +5,7 @@
 #include "Asteroid.h"
 #include "Bullet.h"
 #include "ObjectPool.h"
+#include <glm/glm.hpp>
 #include <SDL2/SDL.h>
 #include <vector>
 
@@ -35,5 +36,6 @@ private:
     Ship mShip;
     ObjectPool<Asteroid> mAsteroidPool;
     ObjectPool<Bullet> mPlayerBulletPool;
+    glm::ivec2 mResolution;
 };
 

@@ -48,7 +48,7 @@ double Asteroid::getRadius() {
 }
 
 void Asteroid::createShape() {
-    mPl.color = glm::vec4(0.8, 0.8, 0.8, 1.0);
+    mPl.color = glm::vec4(0.6, 0.6, 0.6, 1.0);
 
     mRadius = mTier * 10.0;
     mCollisionRadius = mRadius;

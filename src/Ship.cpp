@@ -11,7 +11,7 @@ using namespace std;
 Ship::Ship()
         : mVelocity(0.0)
         , mAcceleration(0.05*60.0)
-        , mMaxSpeed(4.0*60.0)
+        , mMaxSpeed(10.0*60.0)
         , mPl()
         , mThrusting(false)
         , mShootRate(8.0)
@@ -64,8 +64,9 @@ void Ship::shoot(ObjectPool<Bullet>& bulletPool, int dt) {
             bullet->setPosition(mPosition.x, mPosition.y);
             bullet->setRotation(mRotation);
             bullet->age = 0;
-            bullet->mMaxAge = 0.8;
+            bullet->maxAge = 1.0;
             auto dirVec = glm::dvec2(glm::cos(mRotation), glm::sin(mRotation));
+            bullet->speed = 600 + glm::length(mVelocity);
             bullet->dirNormal = glm::normalize(dirVec);
         }
     }
@@ -82,13 +83,13 @@ void Ship::update(int dt) {
     direction = glm::normalize(direction);
 
     if (mThrusting) {
-        mVelocity += mAcceleration*(dt/1000.0) * direction;
+        mVelocity += mAcceleration * direction;
 
     }
 
     if (glm::length(mVelocity) > mMaxSpeed) {
         glm::dvec2 actVelDir = glm::normalize(mVelocity);
-        mVelocity = mMaxSpeed*(dt/1000.0)* actVelDir;
+        mVelocity = mMaxSpeed*actVelDir;
     }
 
     //cout << "speed" << glm::length(mVelocity) << ", max speed:" << mMaxSpeed << endl;
@@ -107,7 +108,7 @@ void Ship::update(int dt) {
         break;
     }
     
-    glm::dvec2 newPos = mPosition + mVelocity;
+    glm::dvec2 newPos = mPosition + mVelocity*(dt/1000.0);
     setPosition(newPos.x, newPos.y);
 }
 

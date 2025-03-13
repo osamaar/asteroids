@@ -42,8 +42,13 @@ Game::Game()
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
 
+    SDL_DisplayMode dispMode;
+    SDL_GetDesktopDisplayMode(0, &dispMode);
+    mResolution.x = dispMode.w;
+    mResolution.y = dispMode.h;
+
     mWin = SDL_CreateWindow("Asteroids", SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED, WIN_W, WIN_H, SDL_WINDOW_OPENGL);
+        SDL_WINDOWPOS_CENTERED, mResolution.x, mResolution.y, SDL_WINDOW_OPENGL);
 
     mContext = SDL_GL_CreateContext(mWin);
     SDL_GL_SetSwapInterval(1);		// vsync 0:off - 1:on
@@ -57,7 +62,7 @@ Game::Game()
 
     glEnable(GL_MULTISAMPLE);
 
-    glViewport(0, 0, WIN_W, WIN_H);
+    glViewport(0, 0, mResolution.x, mResolution.y);
 }
 
 Game::~Game() {
@@ -66,7 +71,7 @@ Game::~Game() {
 }
 
 void Game::reset() {
-    mShip.setPosition(WIN_W/2, WIN_H/2);
+    mShip.setPosition(mResolution.x/2, mResolution.y/2);
     mShip.setRotation(glm::radians<double>(-90));
     mShip.setVelocity(0, 0);
     mAsteroidPool.releaseAll();
@@ -81,13 +86,13 @@ void Game::mainloop() {
     Shader blurSh("../../res/blur.vert.glsl", "../../res/blur.frag.glsl");
     Shader addSh("../../res/add.vert.glsl", "../../res/add.frag.glsl");
 
-    PassthroughFilter passFilter(passSh, glm::vec2(WIN_W, WIN_H));
-    BlurFilter blurFilter(blurSh, glm::vec2(WIN_W/2, WIN_H/2));
+    PassthroughFilter passFilter(passSh, mResolution);
+    BlurFilter blurFilter(blurSh, mResolution/2);
     blurFilter.setIterations(7);
-    AddFilter addFilter(addSh, glm::vec2(WIN_W, WIN_H));
+    AddFilter addFilter(addSh, mResolution);
     addFilter.setFactor(2);
 
-    PolylineRenderer plr(plSh, glm::vec2(WIN_W, WIN_H));
+    PolylineRenderer plr(plSh, mResolution);
 
     reset();
 
@@ -260,18 +265,18 @@ void Game::updateAsteroids(int dt) {
 }
 
 void Game::wrapAroundScreen(glm::dvec2 &vTarget) {
-    if (vTarget.x < 0) vTarget.x = WIN_W;
-    if (vTarget.x > WIN_W) vTarget.x = 0;
-    if (vTarget.y < 0) vTarget.y = WIN_H;
-    if (vTarget.y > WIN_H) vTarget.y = 0;
+    if (vTarget.x < 0) vTarget.x = mResolution.x;
+    if (vTarget.x > mResolution.x) vTarget.x = 0;
+    if (vTarget.y < 0) vTarget.y = mResolution.y;
+    if (vTarget.y > mResolution.y) vTarget.y = 0;
 }
 
 void Game::generateAsteroids() {
     for (int i = 0; i < 10; i++) {
         Asteroid *a = mAsteroidPool.aquireObject();
         if (a) {
-            double x = randRangeNaive(0, WIN_W);
-            double y = randRangeNaive(0, WIN_H);
+            double x = randRangeNaive(0, mResolution.x);
+            double y = randRangeNaive(0, mResolution.y);
             a->setPosition(x, y);
             double rot = randRangeNaive(0, twoPi);
             auto dirVec = glm::dvec2(glm::cos(rot), glm::sin(rot));

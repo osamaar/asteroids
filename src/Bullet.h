@@ -11,7 +11,7 @@ public:
     // Change poolState.alive when bullet life is over.
     PoolState poolState;
     double age;
-    double mMaxAge;
+    double maxAge;
     double speed;
     glm::dvec2 dirNormal;
 
