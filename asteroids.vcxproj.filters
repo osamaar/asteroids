@@ -66,7 +66,7 @@
     <ClCompile Include="src\ShakeFilter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sound.cpp">
+    <ClCompile Include="src\SoundClip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -125,7 +125,7 @@
     <ClInclude Include="src\ShakeFilter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sound.h">
+    <ClInclude Include="src\SoundClip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

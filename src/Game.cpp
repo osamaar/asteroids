@@ -1,4 +1,4 @@
-#include "Sound.h"
+#include "SoundClip.h"
 #include "AddFilter.h"
 #include "BlurFilter.h"
 #include "PassthroughFilter.h"
@@ -73,15 +73,21 @@ Game::Game()
     glEnable(GL_MULTISAMPLE);
 
     glViewport(0, 0, mResolution.x, mResolution.y);
+    SDL_ShowCursor(SDL_DISABLE);
 
     Mix_Volume(-1, 64);
     Mix_VolumeMusic(40);
 
-    mShootSound = new Sound("../../res/shoot.wav");
+    mShootSound = new SoundClip("../../res/shoot.wav");
     mShootSound->setVolume(35);
+    mExplosionSound0 = new SoundClip("../../res/explosion-a.wav");
+    mExplosionSound0->setVolume(50);
+    mExplosionSound1 = new SoundClip("../../res/explosion-b.wav");
+    mExplosionSound1->setVolume(60);
 }
 
 Game::~Game() {
+    SDL_ShowCursor(SDL_ENABLE);
     Mix_HaltMusic();
     Mix_HaltChannel(-1);
     if (mShootSound) delete mShootSound;
@@ -255,6 +261,7 @@ void Game::updateShip(Ship &ship, int dt) {
     mAsteroidPool.apply([&](Asteroid& a) {
         if (collides(a, ship)) {
             mPause = true;
+            mExplosionSound1->play();
         }
     });
 
@@ -278,6 +285,7 @@ void Game::updatePlayerBullets(int dt) {
 
             if (a.isAlive()) return;
             mAsteroidPool.releaseObject(a);
+            mExplosionSound0->play();
 
             if (tier > 0) {
                 for (int i = 0; i < 3; i++) {

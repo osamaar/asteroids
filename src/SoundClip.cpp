@@ -1,7 +1,7 @@
-#include "Sound.h"
+#include "SoundClip.h"
 
 
-Sound::Sound(const char * filename, int loop)
+SoundClip::SoundClip(const char * filename, int loop)
         : mLoop(loop)
         , mMaxPlaying(5)
         , mChannel(-2) {
@@ -10,25 +10,25 @@ Sound::Sound(const char * filename, int loop)
     err = Mix_GetError();
 }
 
-Sound::~Sound() {
+SoundClip::~SoundClip() {
     if (mAudio) {
         Mix_FreeChunk(mAudio);
     }
 }
 
-void Sound::play() {
+void SoundClip::play() {
     Mix_HaltChannel(mChannel);
     mChannel = Mix_PlayChannel(-1, mAudio, 0);
 }
 
-void Sound::stop() {
+void SoundClip::stop() {
     Mix_HaltChannel(mChannel);
 }
 
-void Sound::setMaxPlaying(int num) {
+void SoundClip::setMaxPlaying(int num) {
     mMaxPlaying = num;
 }
 
-void Sound::setVolume(int volume) {
+void SoundClip::setVolume(int volume) {
     Mix_VolumeChunk(mAudio, volume);
 }

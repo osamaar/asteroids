@@ -179,7 +179,7 @@
     <ClCompile Include="src\Polyline.cpp" />
     <ClCompile Include="src\PolylineRenderer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\Sound.cpp" />
+    <ClCompile Include="src\SoundClip.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AddFilter.h" />
@@ -200,7 +200,7 @@
     <ClInclude Include="src\Polyline.h" />
     <ClInclude Include="src\PolylineRenderer.h" />
     <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\Sound.h" />
+    <ClInclude Include="src\SoundClip.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\add.frag.glsl" />

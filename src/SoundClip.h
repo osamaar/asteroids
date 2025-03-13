@@ -4,11 +4,11 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL.h>
 
-class Sound
+class SoundClip
 {
 public:
-    Sound(const char *filename, int loop=0);
-    ~Sound();
+    SoundClip(const char *filename, int loop=0);
+    ~SoundClip();
 
     void play();
     void stop();
@@ -20,6 +20,6 @@ private:
     Mix_Chunk *mAudio;
     int mChannel;
 
-    Sound();
+    SoundClip();
 };
 
