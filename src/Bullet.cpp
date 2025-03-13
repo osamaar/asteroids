@@ -3,7 +3,7 @@
 Bullet::Bullet()
         : poolState()
         , age(0)
-        , maxAge(1.0)
+        , maxAge(1000)
         , speed(600.0)
         , dirNormal(1.0, 1.0)
         , mPl() {
@@ -39,7 +39,7 @@ void Bullet::update(int dt) {
     setPosition(newPos.x, newPos.y);
 
     age += dt;
-    if (age > maxAge*1000.0) {
+    if (age > maxAge) {
         poolState.alive = false;
     }
 }

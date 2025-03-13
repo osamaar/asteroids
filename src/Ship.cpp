@@ -64,7 +64,7 @@ bool Ship::shoot(ObjectPool<Bullet>& bulletPool, int dt) {
             bullet->setPosition(mPosition.x, mPosition.y);
             bullet->setRotation(mRotation);
             bullet->age = 0;
-            bullet->maxAge = 1.0;
+            bullet->maxAge = 1000;
             auto dirVec = glm::dvec2(glm::cos(mRotation), -glm::sin(mRotation));
             bullet->speed = 600 + glm::length(mVelocity);
             bullet->dirNormal = glm::normalize(dirVec);
