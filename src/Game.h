@@ -16,6 +16,7 @@ class BlurFilter;
 class AddFilter;
 class ScreenShakeFilter;
 class ScanlineFilter;
+class ColorShiftFilter;
 
 class Game {
 public:
@@ -54,11 +55,13 @@ private:
     SoundClip *mExplosionSound0;
     SoundClip *mExplosionSound1;
 
-    Shader *plSh, *passSh, *blurSh, *addSh, *screenShakeSh, *scanlineSh;
+    Shader *plSh, *passSh, *blurSh, *addSh,*screenShakeSh,
+           *scanlineSh, *colorShiftSh;
     PassthroughFilter *passFilter;
     BlurFilter *blurFilter;
     AddFilter *addFilter;
     ScanlineFilter *scanlineFilter;
     ScreenShakeFilter *screenShakeFilter;
+    ColorShiftFilter *colorShiftFilter;
 };
 

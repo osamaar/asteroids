@@ -15,6 +15,7 @@ ScreenShakeFilter::ScreenShakeFilter(Shader &shader,
         , mLastOffset(0.0, 0.0)
         , mNextOffset(0.0, 0.0)
         , mCurrOffset(0.0, 0.0)
+        , mRadius(0.0)
         , mElapsed(0)
         , mFreq(20.0) {
     registerCommonShaderUniforms(*mShader);
@@ -42,12 +43,6 @@ void ScreenShakeFilter::init(double radius) {
 }
 
 void ScreenShakeFilter::update(int dt) {
-    // Reached target
-    if (mRadius <= 0) {
-        mCurrOffset = glm::dvec2(0.0, 0.0);
-        return;
-    }
-    
     mElapsed += dt;
     double waveLen = 1000.0/mFreq;
 
@@ -60,6 +55,12 @@ void ScreenShakeFilter::update(int dt) {
     mCurrOffset = glm::mix(mLastOffset, mNextOffset, mElapsed/waveLen);
 
     mRadius -= 0.1*dt/1000.0;
+
+    // Reached target
+    if (mRadius <= 0.0) {
+        mRadius = 0.0;
+        mNextOffset = glm::dvec2(0.0, 0.0);
+    }
 }
 
 void ScreenShakeFilter::pickNextOffset() {

@@ -1,3 +1,4 @@
+#include "ColorShiftFilter.h"
 #include "ScanlineFilter.h"
 #include "ScreenShakeFilter.h"
 #include "SoundClip.h"
@@ -187,8 +188,14 @@ void Game::mainloop() {
         screenShakeFilter->process();
         screenShakeFilter->unbind();
 
-        scanlineFilter->bind();
+        colorShiftFilter->bind();
         screenShakeFilter->renderContent();
+        colorShiftFilter->process();
+        colorShiftFilter->unbind();
+
+        scanlineFilter->bind();
+        colorShiftFilter->renderContent();
+        //screenShakeFilter->renderContent();
         scanlineFilter->process();
         scanlineFilter->unbind();
 
@@ -250,6 +257,7 @@ void Game::update(int dt) {
         updateEnemyBullets(dt);
         updateAsteroids(dt);
         screenShakeFilter->update(dt);
+        colorShiftFilter->update(dt);
     }
 
     if (mAsteroidPool.getActiveCount() == 0) {
@@ -301,7 +309,8 @@ void Game::updatePlayerBullets(int dt) {
             if (a.isAlive()) return;
             mAsteroidPool.releaseObject(a);
             mExplosionSound0->play();
-            screenShakeFilter->init(0.03);
+            screenShakeFilter->init(0.05);
+            colorShiftFilter->init(0.01);
 
             if (tier > 0) {
                 for (int i = 0; i < 3; i++) {
@@ -360,6 +369,7 @@ void Game::loadShaders() {
     addSh = new Shader("res/add.vert.glsl", "res/add.frag.glsl");
     screenShakeSh = new Shader("res/screenshake.vert.glsl", "res/screenshake.frag.glsl");
     scanlineSh = new Shader("res/scanline.vert.glsl", "res/scanline.frag.glsl");
+    colorShiftSh = new Shader("res/colorshift.vert.glsl", "res/colorshift.frag.glsl");
 }
 
 void Game::loadFilters() {
@@ -370,6 +380,7 @@ void Game::loadFilters() {
     addFilter->setFactor(2);
     screenShakeFilter = new ScreenShakeFilter(*screenShakeSh, mResolution);
     scanlineFilter = new ScanlineFilter(*scanlineSh, mResolution);
+    colorShiftFilter = new ColorShiftFilter(*colorShiftSh, mResolution);
 }
 
 void Game::unloadShaders() {
