@@ -10,8 +10,8 @@ using namespace std;
 
 Ship::Ship()
         : mVelocity(0.0)
-        , mAcceleration(0.05*60.0)
-        , mMaxSpeed(10.0*60.0)
+        , mAcceleration(/*0.05*60.0*/120.0)
+        , mMaxSpeed(/*10.0*60.0*/300)
         , mPl()
         , mThrusting(false)
         , mShootRate(8.0)
@@ -85,7 +85,7 @@ void Ship::update(int dt) {
     direction = glm::normalize(direction);
 
     if (mThrusting) {
-        mVelocity += mAcceleration * direction;
+        mVelocity += mAcceleration * (dt/1000.0) * direction;
 
     }
 
