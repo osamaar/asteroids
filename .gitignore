@@ -1,5 +1,6 @@
 Win32/
 x64/
+dist/
 asteroids.sdf
 asteroids.opensdf
 .vs
